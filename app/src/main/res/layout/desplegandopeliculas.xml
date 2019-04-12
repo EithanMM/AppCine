@@ -46,13 +46,16 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:text="Atributo03"
+                android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/paraelatributo04"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:text="02:00 p m"
+                android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold" />
 
         </LinearLayout>
