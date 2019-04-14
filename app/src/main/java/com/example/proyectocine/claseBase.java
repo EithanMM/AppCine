@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class claseBase extends AppCompatActivity {
 
@@ -23,6 +24,10 @@ public class claseBase extends AppCompatActivity {
         AlertDialog alert11 = builder1.create();
         alert11.show();
         ;
+    }
+
+    public void Mensaje(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     /*-----------------------------Metodos publicos de manejo de BD-------------------------------*/
