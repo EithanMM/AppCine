@@ -69,8 +69,23 @@ public class EntidadesBD {
                 "\t   Pelicula.IdPelicula = Funcion.IdPelicula;";
     }
 
+    public String Vista_Funcion1(){
+        return "CREATE VIEW vista_funcion AS\n" +
+                "\tSELECT  Funcion.IdFuncion AS Id_Funcion, Pelicula.IdPelicula AS Id_Pelicula, Sala.IdSala AS Id_Sala, \n" +
+                "\t\t\tPelicula.NombrePelicula AS NombrePelicula, Sala.NombreSala AS NombreSala, Funcion.DiaFuncion AS DiaFuncion, Pelicula.Tipo,\n" +
+                "\t\t\tFuncion.HoraInicio AS HoraInicio\n" +
+                "\tFROM Funcion\n" +
+                "    INNER JOIN Sala INNER JOIN Pelicula\n" +
+                "\tON Pelicula.IdPelicula = Funcion.IdPelicula AND\n" +
+                "\t   Funcion.IdSala = Sala.idSala;";
+    }
+
+    public String ObtenerVistaFuncion(){
+        return "SELECT * FROM vista_funcion";
+    }
+
     public String ObtenerVistaBitacora(){
-        return "SELECT * FROM Bitacora;";
+        return "SELECT * FROM Bitacora";
     }
 
     public String ObtenerAsientosOcupadosSegunFuncion(int id_funcion){

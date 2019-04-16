@@ -2,15 +2,26 @@ package com.example.proyectocine;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class claseBase extends AppCompatActivity {
 
-    DBAdapterSQL db;
+     private DBAdapterSQL db;
+     private GmailHelper  gh = new GmailHelper();
+
+
+     private TextView cedula;
+     private TextView nombre;
+     private TextView apellido;
+     private TextView correo;
 
     public void MensajeOK(String msg) {
         View v1 = getWindow().getDecorView().getRootView();
@@ -53,21 +64,122 @@ public class claseBase extends AppCompatActivity {
         public void DropearYCrearBD(){
             MensajeOK(db.DropearYCrearBD());
         }
+
+        public ArrayList<ObjetoFuncion> ObtenerTodasFunciones(){
+            return db.ObtenerTodasFunciones();
+        }
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
-    public void MostrarAsientosSeleccionados(VariablesGlobales vg){
-        TextView Mi_textview = (TextView) findViewById(R.id.input_asientos);
-        String datos = "";
-        int tam = vg.getListaAsientos().size();
-        for(int i = 0; i < tam; i++){
-            if(tam == 1){
-                datos+= vg.getListaAsientos().get(i).toString();
-            } else {
-                datos+= vg.getListaAsientos().get(i).toString()+",";
-            }
+
+    public int DeterminarImagen(String id_pelicula){
+        int res = 0;
+        switch(Integer.parseInt(id_pelicula)){
+            case 1:
+                //Coco
+                    res = R.drawable.coco;
+                break;
+            case 2:
+                //Cementerio
+                res = R.drawable.cementerio_maldito;
+                break;
+            case 3:
+                //Capitana Marvel
+                res = R.drawable.capitana_marvel;
+                break;
+            case 4:
+                //Avenger
+                res = R.drawable.infinity_war;
+                break;
+            case 5:
+                //La Pasion
+                res = R.drawable.pasion_cristo;
+                break;
+            case 6:
+                //El Aro
+                res = R.drawable.the_ring;
+                break;
+            case 7:
+                //Doctor Strange
+                res = R.drawable.doctor_strange;
+                break;
+            case 8:
+                //Bohemian
+                res = R.drawable.bohemian;
+                break;
+            case 9:
+                //La Forma del Agua
+                res = R.drawable.forma_agua;
+                break;
+            case 10:
+                //Dragon Ball
+                res = R.drawable.dragon_ball;
+                break;
         }
-        Mi_textview.setText(datos);
+        return res;
     }
+
+    public void OnclickDelButton(int ref) {
+        View view =findViewById(ref);
+        Button miButton = (Button) view;
+        miButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intento;
+                VariablesGlobales vg = VariablesGlobales.getInstance();
+                ArrayList<String> asientos = vg.getListaAsientos();
+                switch (v.getId()) {
+
+                    case R.id.btn_continuar:
+                        if(asientos.size() == 0){Mensaje("Debe seleccionar almenos una butaca."); break;}
+                        else {
+                            intento = new Intent(getApplicationContext(), ActivityPagoTiquete.class);
+                            startActivity(intento);
+                            break;
+                        }
+
+                    case R.id.btn_volver:
+                        intento = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intento);
+                        break;
+
+                    case R.id.btn_realiar_pago:
+                        intento = new Intent(getApplicationContext(), MainActivity.class);
+                        EnviarEmail(intento);
+                        break;
+                    case R.id.btn_vovler_seleccion_butacas:
+                        intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
+                        startActivity(intento);
+                        break;
+                    default:break; }
+            }
+        });
+    }// fin de OnclickDelButton
+
+    public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo){
+        this.cedula = cedula;
+        this.nombre =  nombre;
+        this.apellido =  apellido;
+        this.correo = correo;
+    }
+
+    private void EnviarEmail( Intent intento){
+        VariablesGlobales vg = VariablesGlobales.getInstance();
+        if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
+            MensajeOK(("Compra realizada exitosamente!"));
+            Iterator<String> it = vg.getListaAsientos().iterator();
+            LimpiarListaAsientos(vg);
+            intento = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intento);
+        } else {
+            MensajeOK("Ocurrio un error a la hora de realizar el pago.");
+        }
+
+    }
+
+    public void LimpiarListaAsientos(VariablesGlobales vg){
+        vg.getListaAsientos().clear();
+    }
+
     /*--------------------------------------------------------------------------------------------*/
     }
 
