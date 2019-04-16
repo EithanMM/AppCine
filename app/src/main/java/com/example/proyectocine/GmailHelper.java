@@ -1,11 +1,26 @@
 package com.example.proyectocine;
 
 import android.os.AsyncTask;
+import android.util.Base64;
+import android.util.Log;
 import android.widget.TextView;
 
+
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -15,11 +30,14 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import static android.content.ContentValues.TAG;
+
 public class GmailHelper {
 
     Session session = null;
     Properties prop = null;
     private String Destino, Titulo, Mensaje;
+    private static String cryptoPass = "sup3rS3xy";
     public boolean email_enviado;
 
     public GmailHelper(){
@@ -45,7 +63,7 @@ public class GmailHelper {
         session = Session.getDefaultInstance(prop, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("cineTIMoviles@gmail.com","cineTI42309");
+                return new PasswordAuthentication("cineTIMoviles@gmail.com",ObtenerPermisos());
             }
         });
 
@@ -131,5 +149,80 @@ public class GmailHelper {
         int resultado = numButacas * 1500;
 
         return String.format("₡ %,.1f", (float)resultado);
+    }
+
+    private String Encriptar(String value){
+        try {
+            DESKeySpec keySpec = new DESKeySpec(cryptoPass.getBytes("UTF8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            byte[] clearText = value.getBytes("UTF8");
+            // Cipher is not thread safe
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            String encrypedValue = Base64.encodeToString(cipher.doFinal(clearText), Base64.DEFAULT);
+            Log.d(TAG, "Encrypted: " + value + " -> " + encrypedValue);
+            return encrypedValue;
+
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+    private String Desencriptar( String value) {
+        try {
+            DESKeySpec keySpec = new DESKeySpec(cryptoPass.getBytes("UTF8"));
+            SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
+            SecretKey key = keyFactory.generateSecret(keySpec);
+
+            byte[] encrypedPwdBytes = Base64.decode(value, Base64.DEFAULT);
+            // cipher is not thread safe
+            Cipher cipher = Cipher.getInstance("DES");
+            cipher.init(Cipher.DECRYPT_MODE, key);
+            byte[] decrypedValueBytes = (cipher.doFinal(encrypedPwdBytes));
+
+            String decrypedValue = new String(decrypedValueBytes);
+            Log.d(TAG, "Decrypted: " + value + " -> " + decrypedValue);
+            return decrypedValue;
+
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        }
+        return value;
+    }
+
+
+
+    public String ObtenerPermisos(){
+        String res = "";
+        res = Desencriptar("Ap0KhEYA9jZcy/DO6wan0w==");
+        return res;
     }
 }

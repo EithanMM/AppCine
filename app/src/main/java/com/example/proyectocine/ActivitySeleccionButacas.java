@@ -15,6 +15,7 @@ public class ActivitySeleccionButacas extends claseBase {
         setContentView(R.layout.activity_seleccion_butacas);
         TextView Mi_textview = (TextView) findViewById(R.id.input_asientos);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        CrearYAbrirBaseDeDatos();
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
         vg.setTextHelper(Mi_textview);

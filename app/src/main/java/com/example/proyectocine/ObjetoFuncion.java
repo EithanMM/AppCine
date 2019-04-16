@@ -1,5 +1,7 @@
 package com.example.proyectocine;
 
+import java.sql.Time;
+
 public class ObjetoFuncion {
     private String ID;
     private String IdPelicula;
@@ -8,10 +10,10 @@ public class ObjetoFuncion {
     private String NombreSala;
     private String Genero;
     private String DiaFuncion;
-    private String HoraInicio;
+    private Time HoraInicio;
 
 
-    public ObjetoFuncion(String ID, String idPelicula, String idSala, String NombrePelicula, String NombreSala, String Genero, String diaFuncion, String horaInicio) {
+    public ObjetoFuncion(String ID, String idPelicula, String idSala, String NombrePelicula, String NombreSala, String Genero, String diaFuncion, Time horaInicio) {
         this.ID = ID;
         IdPelicula = idPelicula;
         IdSala = idSala;
@@ -30,7 +32,7 @@ public class ObjetoFuncion {
         this.NombreSala = "";
         this.Genero = "";
         this.DiaFuncion = "";
-        this.HoraInicio = "";
+        this.HoraInicio = null;
     }
 
 
@@ -66,11 +68,11 @@ public class ObjetoFuncion {
         DiaFuncion = diaFuncion;
     }
 
-    public String getHoraInicio() {
+    public Time getHoraInicio() {
         return HoraInicio;
     }
 
-    public void setHoraInicio(String horaInicio) {
+    public void setHoraInicio(Time horaInicio) {
         HoraInicio = horaInicio;
     }
 

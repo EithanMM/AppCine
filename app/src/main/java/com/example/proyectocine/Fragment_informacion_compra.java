@@ -59,7 +59,7 @@ public class Fragment_informacion_compra extends Fragment {
         espacio_nombre_pelicula.setText(vg.getNombrePelicula());
         espacio_nombre_sala.setText(vg.getNombreSala());
         espacio_dia_funcion.setText(vg.getDiaFuncion());
-        espacio_hora_funcion.setText(vg.getHoraFuncion());
+        espacio_hora_funcion.setText(String.valueOf(vg.getHoraFuncion()));
         espacio_asientos_seleccionados.setText(ObtenerAsientosSeleccionados(vg));
         espacio_precio.setText(CalcularPrecio(vg));
     }

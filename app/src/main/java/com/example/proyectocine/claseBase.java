@@ -9,7 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 public class claseBase extends AppCompatActivity {
@@ -67,6 +72,22 @@ public class claseBase extends AppCompatActivity {
 
         public ArrayList<ObjetoFuncion> ObtenerTodasFunciones(){
             return db.ObtenerTodasFunciones();
+        }
+
+        public void InsertarRegistroEnBitacora(){
+            CrearYAbrirBaseDeDatos();
+            ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
+            VariablesGlobales vg = VariablesGlobales.getInstance();
+            for(ObjetoFuncion of : funciones){
+                if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
+                   of.getNombreSala().equals(vg.getNombreSala())&&
+                   of.getDiaFuncion().equals(vg.getDiaFuncion())&&
+                   of.getHoraInicio().equals(vg.getHoraFuncion())){
+
+                    db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
+                    break;
+                }
+            }
         }
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
@@ -144,6 +165,7 @@ public class claseBase extends AppCompatActivity {
 
                     case R.id.btn_realiar_pago:
                         intento = new Intent(getApplicationContext(), MainActivity.class);
+                        //InsertarRegistroEnBitacora();
                         EnviarEmail(intento);
                         break;
                     case R.id.btn_vovler_seleccion_butacas:
@@ -180,6 +202,25 @@ public class claseBase extends AppCompatActivity {
         vg.getListaAsientos().clear();
     }
 
+    public String FormatoHora(String hora){
+        Calendar calendar = GenerarCalendario(hora);
+        Date d = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+
+        return sdf.format(d);
+    }
+
+
+    private Calendar GenerarCalendario(String hora){
+        int H = Integer.parseInt(hora.substring(0,2));
+        int M = Integer.parseInt(hora.substring(3,5));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY,H);
+        cal.set(Calendar.MINUTE,M);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal;
+    }
     /*--------------------------------------------------------------------------------------------*/
     }
 

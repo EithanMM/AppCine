@@ -19,12 +19,12 @@ public class EntidadesBD {
                 "Tipo VARCHAR(20) NOT NULL";
     }
 
-    public String EnditadFuncion(){
+    public String EntitadFuncion(){
         return  "IdFuncion PRIMARY KEY,\n" +
                 "IdPelicula INTEGER(5) NOT NULL,\n" +
                 "IdSala INTEGER(5) NOT NULL,\n" +
                 "DiaFuncion VARCHAR(20) NOT NULL,\n" +
-                "HoraInicio VARCHAR(10) NOT NULL,\n" +
+                "HoraInicio TIME NOT NULL,\n" +
                 "FOREIGN KEY (IdPelicula) REFERENCES Pelicula(IdPelicula),\n" +
                 "FOREIGN KEY (IdSala) REFERENCES Sala(IdSala)";
     }
@@ -90,6 +90,11 @@ public class EntidadesBD {
 
     public String ObtenerAsientosOcupadosSegunFuncion(int id_funcion){
         return "SELECT Cedula, Pelicula, Asiento FROM vista_bitacora2 WHERE ID_Funcion = "+id_funcion+"";
+    }
+
+    public String InsertarRegistroBitacora(ObjetoFuncion of, String cedula, String nombre, String apellido, String numTarjeta, String asiento){
+        return "INSERT INTO Bitacora(IdFuncion, EstadoFuncion, AsientosEnUso,Cedula, Nombre, Apellido, NumTarjeta) \n" +
+                "VALUES("+Integer.parseInt(of.getID())+", 'A','"+asiento+"', '"+cedula+"', '"+nombre+"', '"+apellido+"', '"+numTarjeta+"');";
     }
 
 }

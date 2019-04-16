@@ -13,6 +13,7 @@ public class ActivityPagoTiquete extends claseBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pago_tiquete);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        CrearYAbrirBaseDeDatos();
 
         OnclickDelButton(R.id.btn_realiar_pago);
         OnclickDelButton(R.id.btn_vovler_seleccion_butacas);

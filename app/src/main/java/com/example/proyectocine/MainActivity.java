@@ -26,7 +26,7 @@ public class MainActivity extends claseBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CrearYAbrirBaseDeDatos();
-        //DropearYCrearBD(); <- Por si se quiere dropeaar y rehacer la BD.
+        //DropearYCrearBD(); //<- Por si se quiere dropeaar y rehacer la BD.
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         LlenarListaObjetos();
@@ -39,7 +39,7 @@ public class MainActivity extends claseBase {
     private void LlenarListaObjetos() {
         ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
         for(ObjetoFuncion of : funciones){
-            misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+of.getHoraInicio(), DeterminarImagen(of.getIdPelicula())));
+            misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+FormatoHora(of.getHoraInicio().toString()), DeterminarImagen(of.getIdPelicula())));
         }
     }
     private void LlenarListView() {

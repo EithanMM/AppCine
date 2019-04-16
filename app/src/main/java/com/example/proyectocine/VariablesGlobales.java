@@ -3,6 +3,7 @@ package com.example.proyectocine;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class VariablesGlobales {
@@ -14,7 +15,7 @@ public class VariablesGlobales {
     private String NombrePelicula;
     private String NombreSala;
     private String DiaFuncion;
-    private String HoraFuncion;
+    private Time HoraFuncion;
 
 
     private static VariablesGlobales instance = null;
@@ -73,11 +74,11 @@ public class VariablesGlobales {
         DiaFuncion = diaFuncion;
     }
 
-    public String getHoraFuncion() {
+    public Time getHoraFuncion() {
         return HoraFuncion;
     }
 
-    public void setHoraFuncion(String horaFuncion) {
+    public void setHoraFuncion(Time horaFuncion) {
         HoraFuncion = horaFuncion;
     }
 }

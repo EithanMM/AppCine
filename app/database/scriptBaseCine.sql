@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS Sala;
 CREATE TABLE Sala (
 IdSala INTEGER(5) PRIMARY KEY,
+NombreSala VARCHAR(10) NOT NULL,
 NumAsientos INTEGER(5) NOT NULL
 );
 
@@ -22,7 +23,7 @@ IdFuncion PRIMARY KEY,
 IdPelicula INTEGER(5) NOT NULL,
 IdSala INTEGER(5) NOT NULL,
 DiaFuncion VARCHAR(20) NOT NULL,
-HoraInicio VARCHAR(10) NOT NULL,
+HoraInicio TIME NOT NULL,
 FOREIGN KEY (IdPelicula) REFERENCES Pelicula(IdPelicula),
 FOREIGN KEY (IdSala) REFERENCES Sala(IdSala)
 );
@@ -59,25 +60,62 @@ INSERT INTO Pelicula(IdPelicula,NombrePelicula,Sinopsis,Publico,Tipo) VALUES(8,"
 INSERT INTO Pelicula(IdPelicula,NombrePelicula,Sinopsis,Publico,Tipo) VALUES(9,"La forma del agua","Elisa es una joven muda que se enamora de un hombre anfibio que está recluido en un acuario en un laboratorio secreto, propiedad del Gobierno, en el que ella trabaja limpiando. Llevada por el amor, Elisa trama un plan para liberar al mutante.","M","Drama");
 INSERT INTO Pelicula(IdPelicula,NombrePelicula,Sinopsis,Publico,Tipo) VALUES(10,"Dragon Ball Z: La Batalla de los Dioses","Los Peleadores Z deben contender con Bills, el Dios de la Destrucción. Pero se necesita un dios para luchar contra un dios, y ninguno de ellos lo es... ni siquiera los Saiyans.","E","Animacion");
 
-INSERT INTO Sala(IdSala, NumAsientos)VALUES(1,30);
-INSERT INTO Sala(IdSala, NumAsientos)VALUES(2,30);
-INSERT INTO Sala(IdSala, NumAsientos)VALUES(3,30);
-INSERT INTO Sala(IdSala, NumAsientos)VALUES(4,30);
+INSERT INTO Sala(IdSala,NombreSala, NumAsientos)VALUES(1,"Sala A",30);
+INSERT INTO Sala(IdSala,NombreSala, NumAsientos)VALUES(2,"Sala B",30);
+INSERT INTO Sala(IdSala,NombreSala, NumAsientos)VALUES(3,"Sala C",30);
+INSERT INTO Sala(IdSala,NombreSala, NumAsientos)VALUES(4,"Sala D",30);
 
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(1,1,1,"Lunes", "1:00 PM");
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(2,2,1,"Lunes", "9:00 PM");
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(1,1,1,"Lunes", '13:00');
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(2,2,1,"Lunes", '9:00');
 
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(3,3,2,"Martes","4:00 PM");
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(4,4,2,"Martes","8:00 PM");
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(3,3,2,"Martes",'16:00');
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(4,4,2,"Martes",'20:00');
 
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(5,5,3,"Miercoles","10:00 AM");
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(6,6,3,"Miercoles","12:00 PM");
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(5,5,3,"Miercoles",'10:00');
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(6,6,3,"Miercoles",'12:00');
 
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(7,7,4,"Jueves","5:00 PM");
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(8,8,4,"Jueves","10:00 PM");
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(7,7,4,"Jueves",'17:00');
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(8,8,4,"Jueves",'10:00' );
 
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(9,9,2,"Viernes","3:00 PM");
-INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(10,10,2,"Viernes","8:00 PM");
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(9,9,2,"Viernes",'15:00');
+INSERT INTO Funcion(IdFuncion, IdPelicula, IdSala, DiaFuncion, HoraInicio) VALUES(10,10,2,"Viernes",'21:00');
 
+INSERT INTO Bitacora(IdFuncion, EstadoFuncion, AsientosEnUso,Cedula, Nombre, Apellido, NumTarjeta) 
+VALUES(1,"Activo","A1","116290648","Eithan","Mendez","19000092");
+INSERT INTO Bitacora(IdFuncion, EstadoFuncion, AsientosEnUso,Cedula, Nombre, Apellido, NumTarjeta) 
+VALUES(1,"Activo","A2","116290648","Eithan","Mendez","19000092");
+INSERT INTO Bitacora(IdFuncion, EstadoFuncion, AsientosEnUso,Cedula, Nombre, Apellido, NumTarjeta) 
+VALUES(6,"Activo","C5","114309876","Jorge","Hernandez","190044442");
 
+DROP VIEW IF EXISTS vista_bitacora;
+CREATE VIEW vista_bitacora AS
+	SELECT Bitacora.Nombre AS Nombre, Bitacora.Cedula AS Cedula, Sala.NombreSala AS Sala, Pelicula.NombrePelicula AS Pelicula,
+		   Funcion.DiaFuncion AS Dia, Funcion.HoraInicio AS Inicio, Bitacora.Fecha AS Fecha, Bitacora.AsientosEnUso AS Asiento	   
+	FROM Bitacora 
+	INNER JOIN Sala INNER JOIN Pelicula INNER JOIN Funcion
+	ON Sala.IdSala = Funcion.IdSala AND
+	   Pelicula.IdPelicula = Funcion.IdPelicula AND
+	   Funcion.IdFuncion = Bitacora.IdFuncion;
+	  
+DROP VIEW IF EXISTS vista_bitacora2;
+CREATE VIEW vista_bitacora2 AS
+	SELECT Bitacora.Cedula AS Cedula, Funcion.IdFuncion AS ID_Funcion, Pelicula.NombrePelicula AS Pelicula, Bitacora.AsientosEnUso AS Asiento
+	FROM Bitacora
+	INNER JOIN Funcion INNER JOIN Pelicula
+	ON Funcion.IdFuncion = Bitacora.IdFuncion AND
+	   Pelicula.IdPelicula = Funcion.IdPelicula;
+	  
+DROP VIEW IF EXISTS vista_funcion;
+CREATE VIEW vista_funcion AS
+	SELECT  Funcion.IdFuncion AS Id_Funcion, Pelicula.IdPelicula AS Id_Pelicula, Sala.IdSala AS Id_Sala, 
+			Pelicula.NombrePelicula AS NombrePelicula, Sala.NombreSala AS NombreSala, Funcion.DiaFuncion AS DiaFuncion, Pelicula.Tipo,
+			Funcion.HoraInicio AS HoraInicio
+	FROM Funcion
+    INNER JOIN Sala INNER JOIN Pelicula
+	ON Pelicula.IdPelicula = Funcion.IdPelicula AND
+	   Funcion.IdSala = Sala.idSala;
+	  
 
+	 -- SELECT * FROM vista_bitacora;
+ -- SELECT Cedula, Pelicula, Asiento FROM vista_bitacora2 WHERE ID_Funcion = 1;
+ -- SELECT * FROM vista_bitacora;

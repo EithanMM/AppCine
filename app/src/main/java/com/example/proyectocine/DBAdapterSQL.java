@@ -5,10 +5,18 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.nfc.Tag;
+import android.util.Log;
 
 import com.example.proyectocine.EntidadesBD;
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 public class DBAdapterSQL {
 
@@ -89,7 +97,7 @@ public class DBAdapterSQL {
 
         db.execSQL("CREATE TABLE "+TABLE_PELICULA+"("+eDB.EntidadPelicula()+");");
 
-        db.execSQL("CREATE TABLE "+TABLE_FUNCION+"("+eDB.EnditadFuncion()+");");
+        db.execSQL("CREATE TABLE "+TABLE_FUNCION+"("+eDB.EntitadFuncion()+");");
 
         db.execSQL("CREATE TABLE "+TABLE_BITACORA+"("+eDB.EntidadBitacora()+");");
 
@@ -119,17 +127,23 @@ public class DBAdapterSQL {
             db.execSQL("INSERT INTO Sala VALUES(3,\"Sala C\",30);");
             db.execSQL("INSERT INTO Sala VALUES(4,\"Sala D\",30);");
 
-            db.execSQL("INSERT INTO Funcion VALUES(1,1,1,\"Lunes\",\"1:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(2,2,1,\"Lunes\", \"9:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(3,3,2,\"Martes\",\"4:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(4,4,2,\"Martes\",\"8:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(5,5,3,\"Miércoles\",\"10:00 AM\");");
+            db.execSQL("INSERT INTO Funcion VALUES(1,1,1,\"Lunes\", '13:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(2,2,1,\"Lunes\", '9:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(3,3,2,\"Martes\",'16:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(4,4,2,\"Martes\",'20:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(5,5,3,\"Miercoles\",'10:00');");
 
-            db.execSQL("INSERT INTO Funcion VALUES(6,6,3,\"Miércoles\",\"12:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(7,7,4,\"Jueves\",\"5:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(8,8,4,\"Jueves\",\"10:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(9,9,2,\"Viernes\",\"3:00 PM\");");
-            db.execSQL("INSERT INTO Funcion VALUES(10,10,2,\"Viernes\",\"8:00 PM\");");
+            db.execSQL("INSERT INTO Funcion VALUES(6,6,3,\"Miercoles\",'12:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(7,7,4,\"Jueves\",'17:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(8,8,4,\"Jueves\",'10:00' );");
+            db.execSQL("INSERT INTO Funcion VALUES(9,9,2,\"Viernes\",'15:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(10,10,2,\"Viernes\",'21:00');");
+
+            db.execSQL("INSERT INTO Funcion VALUES(11,9,3,\"Sábado\",'14:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(12,5,3,\"Sábado\",'18:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(13,2,4,\"Sábado\",'15:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(14,8,4,\"Domingo\",'22:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(15,3,1,\"Domingo\",'17:00');");
 
         } catch(SQLException e){
             e.printStackTrace();
@@ -153,17 +167,17 @@ public class DBAdapterSQL {
     }
 
     // Otra version de Insertar pero usando SQL
-    boolean   insertDatoSQL(String  atributo01, int  atributo02)
-    {
-        String orden = "";
+    public void InsertarRegistroEnBitacora(ObjetoFuncion of, VariablesGlobales vg, String nombre, String apellido, String cedula) {
+        EntidadesBD eDB = new EntidadesBD();
+
         try {
-            db.execSQL(orden);
-            mensaje ="Inserción OK";
-            return true;
+            for(int i = 0; i < vg.getListaAsientos().size(); i++){
+                String asiento = vg.getListaAsientos().get(i);
+                db.execSQL(eDB.InsertarRegistroBitacora(of, cedula,nombre,apellido,"1009023",asiento));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             mensaje ="Error insertando";
-            return false;
 
         }
     }
@@ -219,12 +233,23 @@ public class DBAdapterSQL {
                 String NombreSala = c.getString(4);
                 String Dia = c.getString(5);
                 String Genero = c.getString(6);
-                String Hora = c.getString(7);
+                Time Hora =  FormatoHora(c.getString(7));
                 ObjetoFuncion objF = new ObjetoFuncion(id, idPelicula, idSala, NombrePelicula, NombreSala, Genero, Dia, Hora);
                 resultado.add(objF);
             }
         } else {return null;}
         return resultado;
+    }
+
+    private Time FormatoHora(String hora){
+        DateFormat formatter = new SimpleDateFormat("K:mm");
+        Time time = null;
+        try{
+            time = new Time(formatter.parse(hora).getTime());
+        }catch(ParseException ex){
+            Log.d(TAG, "Error:"+ex.getMessage());
+        }
+        return time;
     }
 
 }
