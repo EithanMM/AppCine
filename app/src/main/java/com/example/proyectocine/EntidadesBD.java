@@ -97,4 +97,8 @@ public class EntidadesBD {
                 "VALUES("+Integer.parseInt(of.getID())+", 'A','"+asiento+"', '"+cedula+"', '"+nombre+"', '"+apellido+"', '"+numTarjeta+"');";
     }
 
+    public String ObtenerInformacionPelicula(String idPelicula) {
+        return "Select Sinopsis, Publico, Tipo from  Pelicula where IdPelicula="+idPelicula;
+    }
+
 }

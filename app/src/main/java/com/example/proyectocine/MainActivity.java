@@ -62,8 +62,9 @@ public class MainActivity extends claseBase {
                 vg.setDiaFuncion(funcion.get(position).getDiaFuncion());
                 vg.setHoraFuncion(funcion.get(position).getHoraInicio());
                 vg.setNombreSala(funcion.get(position).getNombreSala());
+                vg.setIdPelicula(funcion.get(position).getIdPelicula());
 
-                Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
+                Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class);
                 startActivity(intento);
             }
         });

@@ -11,7 +11,7 @@ public class VariablesGlobales {
     private ArrayList<String> ListaAsientos = new ArrayList<>();
     private TextView TextHelper;
     private TableLayout TablaButacas;
-
+    private String idPelicula;
     private String NombrePelicula;
     private String NombreSala;
     private String DiaFuncion;
@@ -80,5 +80,13 @@ public class VariablesGlobales {
 
     public void setHoraFuncion(Time horaFuncion) {
         HoraFuncion = horaFuncion;
+    }
+
+    public String getIdPelicula() {
+        return idPelicula;
+    }
+
+    public void setIdPelicula(String idPelicula) {
+        this.idPelicula = idPelicula;
     }
 }

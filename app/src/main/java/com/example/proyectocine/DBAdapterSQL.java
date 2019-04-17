@@ -252,6 +252,21 @@ public class DBAdapterSQL {
         return time;
     }
 
+    public String ObtenerInfoPelicula(String idPelicula) {
+        Cursor c = db.rawQuery(eDB.ObtenerInformacionPelicula(idPelicula),null);
+        String msg="";
+        if(c.getCount() == 0){msg = "No se encontraron registros..";}
+        else {
+            while(c.moveToNext()){
+                String sinopsis = c.getString(0);
+                String publico = c.getString(1);
+                String tipo = c.getString(2);
+                msg+="Publico: "+publico+"      Tipo: "+tipo+" \n\n\n\n Sinopsis: "+sinopsis+ "\n";
+            }
+        }
+        return msg;
+    }
+
 }
 
 
