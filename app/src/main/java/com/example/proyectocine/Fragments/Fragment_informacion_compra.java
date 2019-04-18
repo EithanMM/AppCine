@@ -1,4 +1,4 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Fragments;
 
 
 import android.os.Bundle;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.R;
 
 import java.util.ArrayList;
 

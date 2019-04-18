@@ -1,4 +1,4 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Fragments;
 
 
 import android.os.Bundle;
@@ -8,8 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.R;
 
 
 /**
@@ -59,6 +64,8 @@ public class Fragment_butacas extends Fragment {
         VariablesGlobales vg = VariablesGlobales.getInstance();
         TableLayout Mi_tablelayout = (TableLayout) view.findViewById(R.id.tabla_butacas);
         vg.setTablaButacas(Mi_tablelayout);
+
+        ObtenerButacasOcupadasPorFuncion(vg);
         return view;
 
     }
@@ -629,6 +636,26 @@ public class Fragment_butacas extends Fragment {
         vg.getListaAsientos().remove(butaca);
         TextView input = vg.getTextHelper();
         input.setText("");
+    }
+
+    public void ObtenerButacasOcupadasPorFuncion(VariablesGlobales vg){
+        if(vg.getListaBitacora() != null) {
+            TableLayout tabla = vg.getTablaButacas();
+            TableRow fila;
+            ImageView imagen;
+            for (ObjetoBitacora oB : vg.getListaBitacora()) { // recorremos cada uno de los registros de bitacora.
+                for (int i = 0; i < 6; i++) {
+                    fila = (TableRow) tabla.getChildAt(i);
+                    for (int j = 0; j < 5; j++) {
+                        imagen = (ImageView) fila.getChildAt(j); //obtenemos la imagen de cada elem de la fila
+                        if (imagen.getTag().toString().equals("D"+ oB.getAsientoEnUso())) {
+                            imagen.setImageResource(R.drawable.butaca_ocupada);
+                            imagen.setClickable(false);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

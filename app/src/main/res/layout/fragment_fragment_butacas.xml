@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment_butacas">
+    tools:context=".Fragments.Fragment_butacas">
 
     <TableLayout
         android:id="@+id/tabla_butacas"
@@ -21,7 +21,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TableRow
-            android:id="@+id/tabla_butacas"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

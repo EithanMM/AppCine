@@ -1,24 +1,23 @@
-package com.example.proyectocine;
-
+package com.example.proyectocine.Helpers;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.TextView;
-
-
+import com.example.proyectocine.Controllers.VariablesGlobales;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Properties;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.mail.Authenticator;
@@ -116,7 +115,7 @@ public class GmailHelper {
                     "<p>"+vg.getNombrePelicula()+"</p>"+
                     "<hr>"+
                     "<h5>Función</h5>"+
-                    "<p>"+vg.getDiaFuncion()+" "+vg.getHoraFuncion()+"</p>"+
+                    "<p>"+vg.getDiaFuncion()+" "+FormatoHora(vg.getHoraFuncion().toString())+"</p>"+
                     "<hr>"+
                     "<h5>Asientos</h5>"+
                     "<p>"+ObtenerAsientosSeleccionados(vg)+"</p>"+
@@ -218,11 +217,29 @@ public class GmailHelper {
         return value;
     }
 
-
-
-    public String ObtenerPermisos(){
+    private String ObtenerPermisos(){
         String res = "";
         res = Desencriptar("Ap0KhEYA9jZcy/DO6wan0w==");
         return res;
     }
+
+    private String FormatoHora(String hora){
+        Calendar calendar = GenerarCalendario(hora);
+        Date d = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+
+        return sdf.format(d);
+    }
+
+    private Calendar GenerarCalendario(String hora){
+        int H = Integer.parseInt(hora.substring(0,2));
+        int M = Integer.parseInt(hora.substring(3,5));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY,H);
+        cal.set(Calendar.MINUTE,M);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal;
+    }
+
 }

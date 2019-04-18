@@ -1,4 +1,4 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,8 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.proyectocine.R;
 
-public class HorarioFragment extends Fragment {
+
+public class Fragment_horario extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private String idPelicula="";
@@ -18,7 +20,7 @@ public class HorarioFragment extends Fragment {
     private String mParam2;
 
 
-    public HorarioFragment() {
+    public Fragment_horario() {
         // Required empty public constructor
     }
 
@@ -33,7 +35,7 @@ public class HorarioFragment extends Fragment {
         // Inflate the layout for this fragment
         Toast.makeText(getContext(),idPelicula,Toast.LENGTH_LONG).show();
 
-        return inflater.inflate(R.layout.fragment_horario, container, false);
+        return inflater.inflate(R.layout.fragment_fragment_horario, container, false);
     }
 
 

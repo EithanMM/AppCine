@@ -1,4 +1,4 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Helpers;
 
 import java.sql.Time;
 

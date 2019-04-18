@@ -1,4 +1,4 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Helpers;
 
 public class ObjetosxDesplegar {
     private String atributo01;

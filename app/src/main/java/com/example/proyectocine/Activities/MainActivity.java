@@ -1,19 +1,23 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
+import com.example.proyectocine.Helpers.ObjetosxDesplegar;
+import com.example.proyectocine.R;
+import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.Controllers.claseBase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +68,11 @@ public class MainActivity extends claseBase {
                 vg.setNombreSala(funcion.get(position).getNombreSala());
                 vg.setIdPelicula(funcion.get(position).getIdPelicula());
 
-                Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class);
+                ArrayList<ObjetoBitacora> registros = ObtenerRegistrosDeBitacoraPorFuncion();
+                vg.setListaBitacora(registros);
+
+                Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
+                //Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class); /* <- Modulo de Eithan*/
                 startActivity(intento);
             }
         });

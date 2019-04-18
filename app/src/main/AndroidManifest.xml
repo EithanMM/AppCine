@@ -12,12 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityInfoPelicula"
+            android:name=".Activities.ActivityInfoPelicula"
             android:label="@string/title_activity_info_pelicula"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ActivityPagoTiquete" />
-        <activity android:name=".ActivitySeleccionButacas" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Activities.ActivityPagoTiquete" />
+        <activity android:name=".Activities.ActivitySeleccionButacas" />
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

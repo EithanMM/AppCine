@@ -1,14 +1,15 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Data;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.nfc.Tag;
 import android.util.Log;
 
-import com.example.proyectocine.EntidadesBD;
+import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
 
 import java.sql.Time;
 import java.text.DateFormat;
@@ -127,23 +128,23 @@ public class DBAdapterSQL {
             db.execSQL("INSERT INTO Sala VALUES(3,\"Sala C\",30);");
             db.execSQL("INSERT INTO Sala VALUES(4,\"Sala D\",30);");
 
-            db.execSQL("INSERT INTO Funcion VALUES(1,1,1,\"Lunes\", '13:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(2,2,1,\"Lunes\", '9:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(3,3,2,\"Martes\",'16:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(4,4,2,\"Martes\",'20:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(5,5,3,\"Miercoles\",'10:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(1,1,1,\"Lunes\", '13:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(2,2,1,\"Lunes\", '9:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(3,3,2,\"Martes\",'16:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(4,4,2,\"Martes\",'20:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(5,5,3,\"Miercoles\",'10:00:00');");
 
-            db.execSQL("INSERT INTO Funcion VALUES(6,6,3,\"Miercoles\",'12:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(7,7,4,\"Jueves\",'17:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(8,8,4,\"Jueves\",'10:00' );");
-            db.execSQL("INSERT INTO Funcion VALUES(9,9,2,\"Viernes\",'15:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(10,10,2,\"Viernes\",'21:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(6,6,3,\"Miercoles\",'12:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(7,7,4,\"Jueves\",'17:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(8,8,4,\"Jueves\",'10:00:00' );");
+            db.execSQL("INSERT INTO Funcion VALUES(9,9,2,\"Viernes\",'15:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(10,10,2,\"Viernes\",'21:00:00');");
 
-            db.execSQL("INSERT INTO Funcion VALUES(11,9,3,\"Sábado\",'14:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(12,5,3,\"Sábado\",'18:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(13,2,4,\"Sábado\",'15:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(14,8,4,\"Domingo\",'22:00');");
-            db.execSQL("INSERT INTO Funcion VALUES(15,3,1,\"Domingo\",'17:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(11,9,3,\"Sábado\",'14:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(12,5,3,\"Sábado\",'18:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(13,2,4,\"Sábado\",'15:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(14,8,4,\"Domingo\",'22:00:00');");
+            db.execSQL("INSERT INTO Funcion VALUES(15,3,1,\"Domingo\",'17:00:00');");
 
         } catch(SQLException e){
             e.printStackTrace();
@@ -166,40 +167,23 @@ public class DBAdapterSQL {
         }
     }
 
-    // Otra version de Insertar pero usando SQL
-    public void InsertarRegistroEnBitacora(ObjetoFuncion of, VariablesGlobales vg, String nombre, String apellido, String cedula) {
+    public String InsertarRegistroEnBitacora(ObjetoFuncion of, VariablesGlobales vg, String nombre, String apellido, String cedula) {
         EntidadesBD eDB = new EntidadesBD();
 
         try {
             for(int i = 0; i < vg.getListaAsientos().size(); i++){
                 String asiento = vg.getListaAsientos().get(i);
                 db.execSQL(eDB.InsertarRegistroBitacora(of, cedula,nombre,apellido,"1009023",asiento));
+                mensaje = "good";
             }
         } catch (SQLException e) {
             e.printStackTrace();
             mensaje ="Error insertando";
 
         }
+        return mensaje;
     }
 
-    public String ObtenerButacasOcupadasPorFuncion(int id_funcion){
-        Cursor c = db.rawQuery(eDB.ObtenerAsientosOcupadosSegunFuncion(id_funcion),null);
-        String msg="";
-        if(c.getCount() == 0){msg = "No se encontraron registros..";}
-        else {
-            while(c.moveToNext()){
-                String cedula = c.getString(0);
-                String pelicula = c.getString(1);
-                String asiento = c.getString(2);
-                msg+="ID: "+cedula+" Pelicula: "+pelicula+" Asiento: "+asiento+ "\n";
-            }
-        }
-        return msg;
-    }
-
-    public String ObtenerButacasOcupadas(){
-        return "";
-    }
 
      /*FUNCIONA PRROS*/
     public String ObtenerTodosLosRegistros()
@@ -236,6 +220,25 @@ public class DBAdapterSQL {
                 Time Hora =  FormatoHora(c.getString(7));
                 ObjetoFuncion objF = new ObjetoFuncion(id, idPelicula, idSala, NombrePelicula, NombreSala, Genero, Dia, Hora);
                 resultado.add(objF);
+            }
+        } else {return null;}
+        return resultado;
+    }
+
+    public ArrayList<ObjetoBitacora> ObtenerButacasOcupadas(int id_funcion, String D, Time H){
+        ArrayList<ObjetoBitacora> resultado =  new ArrayList<>();
+        String query = eDB.ObtenerVistaBitacora(id_funcion,D,H);
+        Cursor c = db.rawQuery(query,null);
+        if(c.getCount()!=0){
+            while(c.moveToNext()){
+                String cedula = c.getString(0);
+                String idFuncion = c.getString(1);
+                String pelicula = c.getString(2);
+                String dia = c.getString(3);
+                Time hora = FormatoHora(c.getString(4));
+                String asiento = c.getString(5);
+                ObjetoBitacora objB = new ObjetoBitacora(idFuncion,cedula,pelicula,dia,hora,asiento);
+                resultado.add(objB);
             }
         } else {return null;}
         return resultado;

@@ -1,4 +1,8 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Data;
+
+import com.example.proyectocine.Helpers.ObjetoFuncion;
+
+import java.sql.Time;
 
 public class EntidadesBD {
 
@@ -62,7 +66,9 @@ public class EntidadesBD {
 
     public String Vista_Bitacora2() {
         return "CREATE VIEW vista_bitacora2 AS\n" +
-                "\tSELECT Bitacora.Cedula AS Cedula, Funcion.IdFuncion AS ID_Funcion, Pelicula.NombrePelicula AS Pelicula, Bitacora.AsientosEnUso AS Asiento\n" +
+                "\tSELECT Bitacora.Cedula AS Cedula, Funcion.IdFuncion AS ID_Funcion,\n" +
+                "\tPelicula.NombrePelicula AS Pelicula, Funcion.DiaFuncion AS Dia,\n" +
+                "\tFuncion.HoraInicio AS Hora, Bitacora.AsientosEnUso AS Asiento\n" +
                 "\tFROM Bitacora\n" +
                 "\tINNER JOIN Funcion INNER JOIN Pelicula\n" +
                 "\tON Funcion.IdFuncion = Bitacora.IdFuncion AND\n" +
@@ -84,13 +90,11 @@ public class EntidadesBD {
         return "SELECT * FROM vista_funcion";
     }
 
-    public String ObtenerVistaBitacora(){
-        return "SELECT * FROM Bitacora";
+    public String ObtenerVistaBitacora(int id_funcion, String Dia, Time Hora){
+        return "SELECT * FROM vista_bitacora2 WHERE ID_Funcion = "+id_funcion+" AND Dia = '"+Dia+"' AND Hora = '"+Hora+"';";
     }
 
-    public String ObtenerAsientosOcupadosSegunFuncion(int id_funcion){
-        return "SELECT Cedula, Pelicula, Asiento FROM vista_bitacora2 WHERE ID_Funcion = "+id_funcion+"";
-    }
+
 
     public String InsertarRegistroBitacora(ObjetoFuncion of, String cedula, String nombre, String apellido, String numTarjeta, String asiento){
         return "INSERT INTO Bitacora(IdFuncion, EstadoFuncion, AsientosEnUso,Cedula, Nombre, Apellido, NumTarjeta) \n" +

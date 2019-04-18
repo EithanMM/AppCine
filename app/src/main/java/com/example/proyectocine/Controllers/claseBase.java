@@ -1,16 +1,27 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Controllers;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
+import com.example.proyectocine.Activities.ActivityPagoTiquete;
+import com.example.proyectocine.Activities.ActivitySeleccionButacas;
+import com.example.proyectocine.Activities.MainActivity;
+import com.example.proyectocine.Data.DBAdapterSQL;
+import com.example.proyectocine.Helpers.GmailHelper;
+import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
+import com.example.proyectocine.R;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,13 +31,15 @@ import java.util.Iterator;
 public class claseBase extends AppCompatActivity {
 
      private DBAdapterSQL db;
-     private GmailHelper  gh = new GmailHelper();
+     private GmailHelper gh = new GmailHelper();
+     private VariablesGlobales vg = VariablesGlobales.getInstance();
 
 
      private TextView cedula;
      private TextView nombre;
      private TextView apellido;
      private TextView correo;
+
 
     public void MensajeOK(String msg) {
         View v1 = getWindow().getDecorView().getRootView();
@@ -47,24 +60,24 @@ public class claseBase extends AppCompatActivity {
     }
 
     /*-----------------------------Metodos publicos de manejo de BD-------------------------------*/
-    public void CrearYAbrirBaseDeDatos() {
+        public void CrearYAbrirBaseDeDatos() {
         if (db == null) {
             db = new DBAdapterSQL(this);
             db.open();
         }
     }
 
+    //String drawName = "algo";
+    // int resID = getResources().getIdentifier(drawName, "drawable", getPackageName());
+
         public void DesplegarTodosLosRegistros (){
-            if (db != null) {
+/*            if (db != null) {
                 MensajeOK(db.ObtenerTodosLosRegistros());
             } else {
                 MensajeOK("BD nula");
-            }
+            }*/
         }
 
-        public void ObtenerButacasOcupadasPorFuncion(){
-            MensajeOK(db.ObtenerButacasOcupadasPorFuncion(1));
-        }
 
         public void DropearYCrearBD(){
             MensajeOK(db.DropearYCrearBD());
@@ -74,23 +87,30 @@ public class claseBase extends AppCompatActivity {
             return db.ObtenerTodasFunciones();
         }
 
-        public void InsertarRegistroEnBitacora(){
-            CrearYAbrirBaseDeDatos();
+        public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion(){
+            return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(),vg.getHoraFuncion());
+    }
+
+        public void InsertarRegistroEnBitacora(Intent intento){
             ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
-            VariablesGlobales vg = VariablesGlobales.getInstance();
+            String msg = "";
             for(ObjetoFuncion of : funciones){
                 if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
                    of.getNombreSala().equals(vg.getNombreSala())&&
                    of.getDiaFuncion().equals(vg.getDiaFuncion())&&
                    of.getHoraInicio().equals(vg.getHoraFuncion())){
 
-                    db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
-                    break;
+                    msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
                 }
+            }
+            if(msg.equals("good")){
+                EnviarEmail(intento);
+            } else {
+                MensajeOK("Ocurrio un error a la hora de registrar compra...");
             }
         }
 
-    public String DesplegarInfoPelicula(String idPelicula) {
+        public String DesplegarInfoPelicula(String idPelicula) {
 
         if (db != null) {
             return db.ObtenerInfoPelicula(idPelicula);
@@ -101,7 +121,7 @@ public class claseBase extends AppCompatActivity {
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
 
-    public int DeterminarImagen(String id_pelicula){
+        public int DeterminarImagen(String id_pelicula){
         int res = 0;
         switch(Integer.parseInt(id_pelicula)){
             case 1:
@@ -148,14 +168,13 @@ public class claseBase extends AppCompatActivity {
         return res;
     }
 
-    public void OnclickDelButton(int ref) {
+        public void OnclickDelButton(int ref) {
         View view =findViewById(ref);
         Button miButton = (Button) view;
         miButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intento;
-                VariablesGlobales vg = VariablesGlobales.getInstance();
                 ArrayList<String> asientos = vg.getListaAsientos();
                 switch (v.getId()) {
 
@@ -174,8 +193,7 @@ public class claseBase extends AppCompatActivity {
 
                     case R.id.btn_realiar_pago:
                         intento = new Intent(getApplicationContext(), MainActivity.class);
-                        //InsertarRegistroEnBitacora();
-                        EnviarEmail(intento);
+                        InsertarRegistroEnBitacora(intento);
                         break;
                     case R.id.btn_vovler_seleccion_butacas:
                         intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
@@ -186,20 +204,17 @@ public class claseBase extends AppCompatActivity {
         });
     }// fin de OnclickDelButton
 
-    public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo){
+        public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo){
         this.cedula = cedula;
         this.nombre =  nombre;
         this.apellido =  apellido;
         this.correo = correo;
     }
 
-    private void EnviarEmail( Intent intento){
-        VariablesGlobales vg = VariablesGlobales.getInstance();
+        private void EnviarEmail( Intent intento){
         if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
             MensajeOK(("Compra realizada exitosamente!"));
-            Iterator<String> it = vg.getListaAsientos().iterator();
-            LimpiarListaAsientos(vg);
-            intento = new Intent(getApplicationContext(), MainActivity.class);
+            LimpiarListaAsientos();
             startActivity(intento);
         } else {
             MensajeOK("Ocurrio un error a la hora de realizar el pago.");
@@ -207,11 +222,15 @@ public class claseBase extends AppCompatActivity {
 
     }
 
-    public void LimpiarListaAsientos(VariablesGlobales vg){
+        public void LimpiarListaAsientos(){
         vg.getListaAsientos().clear();
     }
 
-    public String FormatoHora(String hora){
+    public void LimpiarListaBitacora(){
+            vg.setListaBitacora(null);
+    }
+
+        public String FormatoHora(String hora){
         Calendar calendar = GenerarCalendario(hora);
         Date d = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
@@ -219,8 +238,7 @@ public class claseBase extends AppCompatActivity {
         return sdf.format(d);
     }
 
-
-    private Calendar GenerarCalendario(String hora){
+        private Calendar GenerarCalendario(String hora){
         int H = Integer.parseInt(hora.substring(0,2));
         int M = Integer.parseInt(hora.substring(3,5));
         Calendar cal = Calendar.getInstance();

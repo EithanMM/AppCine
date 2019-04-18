@@ -1,10 +1,12 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Activities;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.proyectocine.R;
+import com.example.proyectocine.Controllers.claseBase;
 
 public class ActivityPagoTiquete extends claseBase {
 
@@ -13,6 +15,7 @@ public class ActivityPagoTiquete extends claseBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pago_tiquete);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+
         CrearYAbrirBaseDeDatos();
 
         OnclickDelButton(R.id.btn_realiar_pago);

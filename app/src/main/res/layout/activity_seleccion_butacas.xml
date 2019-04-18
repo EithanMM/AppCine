@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivitySeleccionButacas"
+    tools:context=".Activities.ActivitySeleccionButacas"
     android:background="#2D6DC7">
 
     <Button
@@ -38,7 +38,7 @@
 
     <fragment
         android:id="@+id/fragment3"
-        android:name="com.example.proyectocine.Fragment_tipos_butacas"
+        android:name="com.example.proyectocine.Fragments.Fragment_tipos_butacas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -50,7 +50,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.example.proyectocine.Fragment_butacas"
+        android:name="com.example.proyectocine.Fragments.Fragment_butacas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

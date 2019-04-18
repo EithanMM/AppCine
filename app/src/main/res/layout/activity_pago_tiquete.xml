@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityPagoTiquete">
+    tools:context=".Activities.ActivityPagoTiquete">
 
     <TextView
         android:id="@+id/textView"
@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/fragment2"
-        android:name="com.example.proyectocine.Fragment_informacion_compra"
+        android:name="com.example.proyectocine.Fragments.Fragment_informacion_compra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

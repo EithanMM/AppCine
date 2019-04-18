@@ -1,11 +1,14 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Activities;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.EditText;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.example.proyectocine.R;
+import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.Controllers.claseBase;
 
 public class ActivitySeleccionButacas extends claseBase {
 
@@ -13,14 +16,12 @@ public class ActivitySeleccionButacas extends claseBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seleccion_butacas);
-        TextView Mi_textview = (TextView) findViewById(R.id.input_asientos);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
-        CrearYAbrirBaseDeDatos();
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
+        TextView Mi_textview = (TextView) findViewById(R.id.input_asientos);
         vg.setTextHelper(Mi_textview);
 
-        CrearYAbrirBaseDeDatos();
         OnclickDelButton(R.id.btn_continuar);
         OnclickDelButton(R.id.btn_volver);
     }

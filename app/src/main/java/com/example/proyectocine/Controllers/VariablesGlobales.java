@@ -1,7 +1,9 @@
-package com.example.proyectocine;
+package com.example.proyectocine.Controllers;
 
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import com.example.proyectocine.Helpers.ObjetoBitacora;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 public class VariablesGlobales {
 
     private ArrayList<String> ListaAsientos = new ArrayList<>();
+    private ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
     private TextView TextHelper;
     private TableLayout TablaButacas;
     private String idPelicula;
@@ -88,5 +91,13 @@ public class VariablesGlobales {
 
     public void setIdPelicula(String idPelicula) {
         this.idPelicula = idPelicula;
+    }
+
+    public ArrayList<ObjetoBitacora> getListaBitacora() {
+        return ListaBitacora;
+    }
+
+    public void setListaBitacora(ArrayList<ObjetoBitacora> listaBitacora) {
+        ListaBitacora = listaBitacora;
     }
 }
