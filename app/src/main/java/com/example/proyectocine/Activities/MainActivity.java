@@ -1,6 +1,7 @@
 package com.example.proyectocine.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,20 +25,23 @@ import java.util.List;
 
 public class MainActivity extends claseBase {
     //Esto es una prueba desde el proyecto.
-
+    SharedPreferences prefs = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        prefs = getSharedPreferences("cineTI", MODE_PRIVATE);
         CrearYAbrirBaseDeDatos();
-        //DropearYCrearBD(); //<- Por si se quiere dropeaar y rehacer la BD.
+        if(prefs.getBoolean("firstrun", true)){
+            DropearYCrearBD();
+            prefs.edit().putBoolean("firstrun", false).commit();
+        }
 
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         LlenarListaObjetos();
         LlenarListView();
         RegistrarClicks();
     }
-
 
     private List<ObjetosxDesplegar> misObjetos = new ArrayList<ObjetosxDesplegar>();
     private void LlenarListaObjetos() {
@@ -71,8 +75,8 @@ public class MainActivity extends claseBase {
                 ArrayList<ObjetoBitacora> registros = ObtenerRegistrosDeBitacoraPorFuncion();
                 vg.setListaBitacora(registros);
 
-                Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
-                //Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class); /* <- Modulo de Eithan*/
+                //Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
+                Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class); /* <- Modulo de Eithan*/
                 startActivity(intento);
             }
         });
