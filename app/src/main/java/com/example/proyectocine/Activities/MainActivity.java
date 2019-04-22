@@ -76,7 +76,7 @@ public class MainActivity extends claseBase {
                 vg.setListaBitacora(registros);
 
                 //Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
-                Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class); /* <- Modulo de Eithan*/
+                Intent intento = new Intent(getApplicationContext(), ActividadBoletos.class); /* <- Modulo de Eithan*/
                 startActivity(intento);
             }
         });
