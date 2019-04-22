@@ -47,7 +47,7 @@ public class MainActivity extends claseBase {
     private void LlenarListaObjetos() {
         ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
         for(ObjetoFuncion of : funciones){
-            misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+FormatoHora(of.getHoraInicio().toString()), DeterminarImagen(of.getIdPelicula())));
+            misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+FormatoHora(of.getHoraInicio().toString()), DeterminarImagen(of.getIdPelicula()), of.getIdPelicula()));
         }
     }
     private void LlenarListView() {
@@ -93,10 +93,23 @@ public class MainActivity extends claseBase {
             if (itemView == null) {
                 itemView = getLayoutInflater().inflate(R.layout.desplegandopeliculas, parent, false);
             }
-            ObjetosxDesplegar ObjetoActual = misObjetos.get(position);
+            final ObjetosxDesplegar ObjetoActual = misObjetos.get(position);
             // Fill the view
             ImageView imageView = (ImageView)itemView.findViewById(R.id.ivdibujo);
             imageView.setImageResource(ObjetoActual.getNumDibujo());
+            //Programamos el evento onclick
+
+            imageView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View arg0) {
+
+                    VariablesGlobales vg = VariablesGlobales.getInstance();
+                    vg.setIdPelicula(ObjetoActual.getIdPelicula());
+
+                    Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
+                    startActivity(intento);
+                }
+            });
 
             TextView elatributo01 = (TextView) itemView.findViewById(R.id.paraelatributo01);
             elatributo01.setText(ObjetoActual.getAtributo01());
