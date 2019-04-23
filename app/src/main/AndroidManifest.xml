@@ -11,7 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.ActividadBoletos"></activity>
+        <activity android:name=".Activities.ActivityCeds">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.ActividadBoletos" />
         <activity
             android:name=".Activities.ActivityInfoPelicula"
             android:label="@string/title_activity_info_pelicula"
@@ -19,11 +26,7 @@
         <activity android:name=".Activities.ActivityPagoTiquete" />
         <activity android:name=".Activities.ActivitySeleccionButacas" />
         <activity android:name=".Activities.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
