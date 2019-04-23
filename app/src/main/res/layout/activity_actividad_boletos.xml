@@ -71,32 +71,32 @@
             android:text="$2500" />
 
         <TextView
-            android:id="@+id/paraelatributo03"
+            android:id="@+id/cant_boletos_edad3"
             android:layout_width="26dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:text="0" />
 
         <TextView
-            android:id="@+id/paraelatributo04"
+            android:id="@+id/resta_boletos_edad3"
             android:layout_width="46dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:text="-"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="18sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/paraelatributo05"
+            android:id="@+id/suma_boletos_edad3"
             android:layout_width="74dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:text="+"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="18sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -124,32 +124,32 @@
             android:text="$3200" />
 
         <TextView
-            android:id="@+id/paraelatributo11"
+            android:id="@+id/cant_boletos_adulto"
             android:layout_width="22dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:text="0" />
 
         <TextView
-            android:id="@+id/paraelatributo12"
+            android:id="@+id/resta_boletos_adulto"
             android:layout_width="52dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:text="-"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="18sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/paraelatributo13"
+            android:id="@+id/suma_boletos_adulto"
             android:layout_width="69dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:gravity="center"
             android:text="+"
             android:textColor="@android:color/holo_red_dark"
-            android:textSize="18sp"
+            android:textSize="30sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -184,12 +184,12 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/paraelatributo24"
+                android:id="@+id/vista_total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:gravity="right"
-                android:text="$3200"
+                android:text="0"
                 android:textSize="18sp" />
 
 
@@ -205,7 +205,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/escogerCampos"
+                android:id="@+id/btnEscogerCampos"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@android:color/holo_red_dark"
