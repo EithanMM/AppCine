@@ -123,7 +123,7 @@ public class ActividadBoletos extends claseBase {
                     // escriba lo que desea hacer
                     Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
                     intento.putExtra("total_boletos",total_boletos);
-                    MensajeOK("total_boletos"+total_boletos);
+
                     startActivity(intento);
 
                 }else{
