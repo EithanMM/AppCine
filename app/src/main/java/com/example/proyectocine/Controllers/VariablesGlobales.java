@@ -20,6 +20,8 @@ public class VariablesGlobales {
     private String DiaFuncion;
     private Time HoraFuncion;
 
+    private int precioTotal;
+    private int totalButacas = 10;
 
     private static VariablesGlobales instance = null;
 
@@ -99,5 +101,17 @@ public class VariablesGlobales {
 
     public void setListaBitacora(ArrayList<ObjetoBitacora> listaBitacora) {
         ListaBitacora = listaBitacora;
+    }
+
+    public int getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(int precioTotal) {
+        this.precioTotal = precioTotal;
+    }
+
+    public int getTotalButacas() {
+        return totalButacas;
     }
 }

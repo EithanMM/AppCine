@@ -68,7 +68,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="$2500" />
+            android:text="₡ 2500" />
 
         <TextView
             android:id="@+id/cant_boletos_edad3"
@@ -121,7 +121,7 @@
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="$3200" />
+            android:text="₡ 3200" />
 
         <TextView
             android:id="@+id/cant_boletos_adulto"

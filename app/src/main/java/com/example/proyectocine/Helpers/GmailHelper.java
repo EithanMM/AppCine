@@ -143,11 +143,7 @@ public class GmailHelper {
     }
 
     private String CalcularPrecio(VariablesGlobales vg){
-        ArrayList<String> butacas = vg.getListaAsientos();
-        int numButacas = butacas.size();
-        int resultado = numButacas * 1500;
-
-        return String.format("₡ %,.1f", (float)resultado);
+        return String.format("₡ %,.1f", (float)vg.getPrecioTotal());
     }
 
     private String Encriptar(String value){
