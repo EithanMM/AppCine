@@ -41,6 +41,18 @@ public class claseBase extends AppCompatActivity {
      private TextView correo;
 
 
+    private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
+            cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
+            ,vista_total;
+
+    private Button btnEscogerCampos;
+    private int contador_boletos_edad3  = 0;
+    private int contador_boletos_adulto = 0;
+    private final int PRECIO_BOLETO_ADULTO = 3200;
+    private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
+    private int total_boletos = 0;
+
+
     public void MensajeOK(String msg) {
         View v1 = getWindow().getDecorView().getRootView();
         AlertDialog.Builder builder1 = new AlertDialog.Builder(v1.getContext());
@@ -211,6 +223,20 @@ public class claseBase extends AppCompatActivity {
         this.correo = correo;
     }
 
+        public void iniciarParametrosTextViewParaBoletos(TextView cant_boletos_edad3, TextView resta_boletos_edad3,
+                                                         TextView suma_boletos_edad3, TextView cant_boletos_adulto,
+                                                         TextView resta_boletos_adulto, TextView suma_boletos_adulto,
+                                                         TextView vista_total, Button btnEscogerCampos){
+            this.cant_boletos_edad3 = cant_boletos_edad3;
+            this.resta_boletos_edad3 = resta_boletos_edad3;
+            this.suma_boletos_edad3 = suma_boletos_edad3;
+            this.cant_boletos_adulto = cant_boletos_adulto;
+            this.resta_boletos_adulto = resta_boletos_adulto;
+            this.suma_boletos_adulto = suma_boletos_adulto;
+            this.vista_total = vista_total;
+            this.btnEscogerCampos = btnEscogerCampos;
+        }
+
         private void EnviarEmail( Intent intento){
         if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
             MensajeOK(("Compra realizada exitosamente!"));
@@ -248,6 +274,144 @@ public class claseBase extends AppCompatActivity {
         cal.set(Calendar.MILLISECOND,0);
         return cal;
     }
-    /*--------------------------------------------------------------------------------------------*/
+
+    public void agregarEventos(){
+        resta_boletos_edad3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(contador_boletos_edad3 == 0){
+
+                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                    Mensaje("Sin mas butacas de persona de 3ra edad que remover..");
+
+                }
+
+                if(contador_boletos_edad3 > 0){
+                    total_boletos--;
+                    contador_boletos_edad3--;
+
+                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else{
+
+                }
+            }
+        });
+
+        suma_boletos_edad3.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if(contador_boletos_edad3 == 0){
+                    contador_boletos_edad3++;
+                    total_boletos++;
+
+                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else if(contador_boletos_edad3 + contador_boletos_adulto < 10){
+                    contador_boletos_edad3++;
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+
+                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else {
+                    Mensaje("Limite de butacas alcanzado.");
+                }
+            }
+        });
+
+
+        resta_boletos_adulto.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
+                if(contador_boletos_adulto == 0){
+
+                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                    Mensaje("Sin mas butacas de adulto que remover..");
+                }
+
+                if(contador_boletos_adulto > 0){
+                    total_boletos--;
+                    contador_boletos_adulto--;
+
+                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else{ }
+            }});
+
+
+        suma_boletos_adulto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(contador_boletos_adulto == 0){
+                    contador_boletos_adulto++;
+                    total_boletos++;
+
+                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else if(contador_boletos_edad3 + contador_boletos_adulto < 10){
+                    contador_boletos_adulto++;
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+
+                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+
+                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    vg.setPrecioTotal(result);
+                    vista_total.setText("₡ "+String.valueOf(result));
+                } else {
+                    Mensaje("Limite de butacas alcanzado.");
+                }
+            }
+
+        });
+
+
+        btnEscogerCampos.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View arg0) {
+
+                int cant_edad3 = Integer.parseInt((cant_boletos_edad3.getText().toString()));
+                int cant_adulto = Integer.parseInt((cant_boletos_edad3.getText().toString()));
+                if(cant_edad3 != 0 || cant_adulto != 0){
+
+                    int total_boletos = Integer.parseInt(cant_boletos_edad3.getText().toString())
+                            + Integer.parseInt(cant_boletos_adulto.getText().toString());
+
+                    // escriba lo que desea hacer
+                    Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
+                    intento.putExtra("total_boletos",total_boletos);
+                    startActivity(intento);
+
+                }else{
+                    Mensaje("Debe seleccionar cuantos boletos deseea comprar.");
+                }
+            }
+
+        });
+
     }
+    }
+    /*--------------------------------------------------------------------------------------------*/
 

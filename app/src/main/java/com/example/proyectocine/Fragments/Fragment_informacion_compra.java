@@ -11,7 +11,10 @@ import android.widget.TextView;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -31,10 +34,6 @@ public class Fragment_informacion_compra extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment_info_pelicula, container, false);
 
         PintarInformacionDeTiquete(view);
-        //espacio_dia_funcion.setText(vg.getDiaFuncion());
-        //espacio_nombre_sala.setText(vg.getNombreSala());
-        //espacio_hora_funcion.setText(vg.getHoraFuncion());
-        //MostrarAsientosSeleccionados(espacio_asientos_seleccionados, vg);
         return view;
     }
 
@@ -62,7 +61,7 @@ public class Fragment_informacion_compra extends Fragment {
         espacio_nombre_pelicula.setText(vg.getNombrePelicula());
         espacio_nombre_sala.setText(vg.getNombreSala());
         espacio_dia_funcion.setText(vg.getDiaFuncion());
-        espacio_hora_funcion.setText(String.valueOf(vg.getHoraFuncion()));
+        espacio_hora_funcion.setText(FormatoHora(vg.getHoraFuncion().toString()));
         espacio_asientos_seleccionados.setText(ObtenerAsientosSeleccionados(vg));
         espacio_precio.setText(CalcularPrecio(vg));
     }
@@ -80,12 +79,27 @@ public class Fragment_informacion_compra extends Fragment {
         return resp;
     }
 
-    private String CalcularPrecio(VariablesGlobales vg){
-        ArrayList<String> butacas = vg.getListaAsientos();
-        int numButacas = butacas.size();
-        int resultado = numButacas * 1500;
+    public String FormatoHora(String hora){
+        Calendar calendar = GenerarCalendario(hora);
+        Date d = calendar.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
 
-        return String.format("₡ %,.1f", (float)resultado);
+        return sdf.format(d);
+    }
+
+    private Calendar GenerarCalendario(String hora){
+        int H = Integer.parseInt(hora.substring(0,2));
+        int M = Integer.parseInt(hora.substring(3,5));
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY,H);
+        cal.set(Calendar.MINUTE,M);
+        cal.set(Calendar.SECOND,0);
+        cal.set(Calendar.MILLISECOND,0);
+        return cal;
+    }
+
+    private String CalcularPrecio(VariablesGlobales vg){
+        return String.format("₡ %,.1f", (float)vg.getPrecioTotal());
     }
 
 }

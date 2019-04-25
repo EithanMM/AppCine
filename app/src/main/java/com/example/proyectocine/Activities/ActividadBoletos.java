@@ -13,128 +13,44 @@ import com.example.proyectocine.R;
 
 public class ActividadBoletos extends claseBase {
 
+<<<<<<< HEAD
 
     private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
             cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
             ,vista_total;
+=======
+>>>>>>> 6101319f99e5aaa0f8df7755b26de15de5a96924
 
-    private Button btnEscogerCampos;
-    private int contador_boletos_edad3=0,contador_boletos_adulto=0;
-    private final int PRECIO_BOLETO_ADULTO = 3200;
-    private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
-    private int total_boletos=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_boletos);
 
+<<<<<<< HEAD
 
         btnEscogerCampos = (Button) findViewById(R.id.btnEscogerCampos);
+=======
+        Button btnEscogerCampos = (Button) findViewById(R.id.btnEscogerCampos);
+>>>>>>> 6101319f99e5aaa0f8df7755b26de15de5a96924
 
-        cant_boletos_edad3 = findViewById(R.id.cant_boletos_edad3);
-        resta_boletos_edad3 = findViewById(R.id.resta_boletos_edad3);
-        suma_boletos_edad3 = findViewById(R.id.suma_boletos_edad3);
+        TextView cant_boletos_edad3 = findViewById(R.id.cant_boletos_edad3);
+        TextView resta_boletos_edad3 = findViewById(R.id.resta_boletos_edad3);
+        TextView suma_boletos_edad3 = findViewById(R.id.suma_boletos_edad3);
 
-        cant_boletos_adulto = findViewById(R.id.cant_boletos_adulto);
-        resta_boletos_adulto = findViewById(R.id.resta_boletos_adulto);
-        suma_boletos_adulto = findViewById(R.id.suma_boletos_adulto);
+        TextView cant_boletos_adulto = findViewById(R.id.cant_boletos_adulto);
+        TextView resta_boletos_adulto = findViewById(R.id.resta_boletos_adulto);
+        TextView suma_boletos_adulto = findViewById(R.id.suma_boletos_adulto);
 
-        vista_total = findViewById(R.id.vista_total);
+        TextView vista_total = findViewById(R.id.vista_total);
+
+        iniciarParametrosTextViewParaBoletos(cant_boletos_edad3,resta_boletos_edad3,
+                                             suma_boletos_edad3,cant_boletos_adulto,
+                                             resta_boletos_adulto,suma_boletos_adulto,
+                                             vista_total,btnEscogerCampos);
 
         agregarEventos();
 
-
-    }
-    private void agregarEventos(){
-//        private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
-//                cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
-//                ,vista_total;
-
-
-        resta_boletos_edad3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(contador_boletos_edad3>0){
-                    contador_boletos_edad3--;
-                    total_boletos=  contador_boletos_adulto+contador_boletos_edad3;
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-                }
-                int semi_total = PRECIO_BOLETO_TERCERA_EDAD*contador_boletos_edad3
-                        +PRECIO_BOLETO_ADULTO*contador_boletos_adulto;
-                vista_total.setText(""+semi_total);
-
-            }
-        });
-        suma_boletos_edad3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(contador_boletos_edad3<10 && contador_boletos_adulto<10  &&total_boletos<10){
-                    contador_boletos_edad3++;
-                    total_boletos=  contador_boletos_adulto+contador_boletos_edad3;
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-
-                    int semi_total = PRECIO_BOLETO_TERCERA_EDAD*contador_boletos_edad3
-                            +PRECIO_BOLETO_ADULTO*contador_boletos_adulto;
-
-                    vista_total.setText(""+semi_total);
-                }
-            }
-        });
-        resta_boletos_adulto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(contador_boletos_adulto>0){
-                    contador_boletos_adulto--;
-                    total_boletos=  contador_boletos_adulto+contador_boletos_edad3;
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
-
-                    int semi_total = PRECIO_BOLETO_TERCERA_EDAD*contador_boletos_edad3
-                            +PRECIO_BOLETO_ADULTO*contador_boletos_adulto;
-                    vista_total.setText(""+semi_total);
-                }
-            }
-        });
-        suma_boletos_adulto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(contador_boletos_adulto<10 && contador_boletos_edad3<10 &&total_boletos<10){
-                    contador_boletos_adulto++;
-                    total_boletos=  contador_boletos_adulto+contador_boletos_edad3;
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
-                    int semi_total = PRECIO_BOLETO_TERCERA_EDAD*contador_boletos_edad3
-                            +PRECIO_BOLETO_ADULTO*contador_boletos_adulto;
-
-                    vista_total.setText(""+semi_total);
-                }
-            }
-
-        });
-        btnEscogerCampos.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View arg0) {
-
-                int cant_edad3 = Integer.parseInt((cant_boletos_edad3.getText().toString()));
-                int cant_adulto = Integer.parseInt((cant_boletos_edad3.getText().toString()));
-                if(cant_edad3 !=0 || cant_adulto!= 0){
-
-                    int total_boletos = Integer.parseInt(cant_boletos_edad3.getText().toString())
-                            + Integer.parseInt(cant_boletos_adulto.getText().toString());
-
-                    // escriba lo que desea hacer
-                    Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
-                    intento.putExtra("total_boletos",total_boletos);
-
-                    startActivity(intento);
-
-                }else{
-                    Mensaje("Debe seleccionar cuantos boletos deseea comprar.");
-                }
-            }
-
-        });
 
     }
 }
