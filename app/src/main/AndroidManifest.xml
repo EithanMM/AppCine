@@ -3,7 +3,7 @@
     package="com.example.proyectocine">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.PaymentDetailsActivity"></activity>
         <activity android:name=".Activities.ActivityCeds">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +26,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.ActivityPagoTiquete" />
         <activity android:name=".Activities.ActivitySeleccionButacas" />
-        <activity android:name=".Activities.MainActivity">
-
-        </activity>
+        <activity android:name=".Activities.MainActivity"></activity>
     </application>
 
 </manifest>

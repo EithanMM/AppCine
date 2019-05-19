@@ -1,8 +1,10 @@
 package com.example.proyectocine.Controllers;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,19 @@ import android.widget.Toast;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
+import com.example.proyectocine.Activities.PaymentDetailsActivity;
 import com.example.proyectocine.Data.DBAdapterSQL;
 import com.example.proyectocine.Helpers.GmailHelper;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.R;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,23 +39,30 @@ import java.util.Iterator;
 
 public class claseBase extends AppCompatActivity {
 
-     private DBAdapterSQL db;
-     private GmailHelper gh = new GmailHelper();
-     private VariablesGlobales vg = VariablesGlobales.getInstance();
+    private DBAdapterSQL db;
+    private GmailHelper gh = new GmailHelper();
+    private VariablesGlobales vg = VariablesGlobales.getInstance();
 
 
-     private TextView cedula;
-     private TextView nombre;
-     private TextView apellido;
-     private TextView correo;
+    private TextView cedula;
+    private TextView nombre;
+    private TextView apellido;
+    private TextView correo;
 
 
-    private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
-            cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
-            ,vista_total;
+    private TextView cant_boletos_edad3, resta_boletos_edad3, suma_boletos_edad3,
+            cant_boletos_adulto, resta_boletos_adulto, suma_boletos_adulto, vista_total;
+
+    //views para detalles de pago paypal
+    public static final String PAYPAL_CLIENT_ID = "AXPLEB3uBxOGOCVsumxfmEofmN6m7CocpInV827k3MeeOWFO47YgBSX4ZMl2WtMa0K0GpJcfOuqcRUIX";
+    TextView txt_id, txt_monto, txt_status;
+    public String dinero;
+    public static  final int PAYPAL_REQUEST_CODE = 7171;
+    public PayPalConfiguration configuration = new PayPalConfiguration().environment(
+            PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(PAYPAL_CLIENT_ID);
 
     private Button btnEscogerCampos;
-    private int contador_boletos_edad3  = 0;
+    private int contador_boletos_edad3 = 0;
     private int contador_boletos_adulto = 0;
     private final int PRECIO_BOLETO_ADULTO = 3200;
     private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
@@ -72,7 +88,7 @@ public class claseBase extends AppCompatActivity {
     }
 
     /*-----------------------------Metodos publicos de manejo de BD-------------------------------*/
-        public void CrearYAbrirBaseDeDatos() {
+    public void CrearYAbrirBaseDeDatos() {
         if (db == null) {
             db = new DBAdapterSQL(this);
             db.open();
@@ -82,47 +98,47 @@ public class claseBase extends AppCompatActivity {
     //String drawName = "algo";
     // int resID = getResources().getIdentifier(drawName, "drawable", getPackageName());
 
-        public void DesplegarTodosLosRegistros (){
+    public void DesplegarTodosLosRegistros() {
 /*            if (db != null) {
                 MensajeOK(db.ObtenerTodosLosRegistros());
             } else {
                 MensajeOK("BD nula");
             }*/
-        }
-
-
-        public void DropearYCrearBD(){
-            MensajeOK(db.DropearYCrearBD());
-        }
-
-        public ArrayList<ObjetoFuncion> ObtenerTodasFunciones(){
-            return db.ObtenerTodasFunciones();
-        }
-
-        public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion(){
-            return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(),vg.getHoraFuncion());
     }
 
-        public void InsertarRegistroEnBitacora(Intent intento){
-            ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
-            String msg = "";
-            for(ObjetoFuncion of : funciones){
-                if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
-                   of.getNombreSala().equals(vg.getNombreSala())&&
-                   of.getDiaFuncion().equals(vg.getDiaFuncion())&&
-                   of.getHoraInicio().equals(vg.getHoraFuncion())){
 
-                    msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
-                }
-            }
-            if(msg.equals("good")){
-                EnviarEmail(intento);
-            } else {
-                MensajeOK("Ocurrio un error a la hora de registrar compra...");
+    public void DropearYCrearBD() {
+        MensajeOK(db.DropearYCrearBD());
+    }
+
+    public ArrayList<ObjetoFuncion> ObtenerTodasFunciones() {
+        return db.ObtenerTodasFunciones();
+    }
+
+    public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion() {
+        return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(), vg.getHoraFuncion());
+    }
+
+    public void InsertarRegistroEnBitacora(Intent intento) {
+        ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
+        String msg = "";
+        for (ObjetoFuncion of : funciones) {
+            if (of.getNombrePelicula().equals(vg.getNombrePelicula()) &&
+                    of.getNombreSala().equals(vg.getNombreSala()) &&
+                    of.getDiaFuncion().equals(vg.getDiaFuncion()) &&
+                    of.getHoraInicio().equals(vg.getHoraFuncion())) {
+
+                msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
             }
         }
+        if (msg.equals("good")) {
+            EnviarEmail(intento);
+        } else {
+            MensajeOK("Ocurrio un error a la hora de registrar compra...");
+        }
+    }
 
-        public String DesplegarInfoPelicula(String idPelicula) {
+    public String DesplegarInfoPelicula(String idPelicula) {
 
         if (db != null) {
             return db.ObtenerInfoPelicula(idPelicula);
@@ -133,12 +149,12 @@ public class claseBase extends AppCompatActivity {
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
 
-        public int DeterminarImagen(String id_pelicula){
+    public int DeterminarImagen(String id_pelicula) {
         int res = 0;
-        switch(Integer.parseInt(id_pelicula)){
+        switch (Integer.parseInt(id_pelicula)) {
             case 1:
                 //Coco
-                    res = R.drawable.coco;
+                res = R.drawable.coco;
                 break;
             case 2:
                 //Cementerio
@@ -180,10 +196,10 @@ public class claseBase extends AppCompatActivity {
         return res;
     }
 
-        public void OnclickDelButton(int ref) {
-        View view =findViewById(ref);
+    public void OnclickDelButton(int ref) {
+        View view = findViewById(ref);
         Button miButton = (Button) view;
-        miButton.setOnClickListener(new View.OnClickListener(){
+        miButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intento;
@@ -191,8 +207,10 @@ public class claseBase extends AppCompatActivity {
                 switch (v.getId()) {
 
                     case R.id.btn_continuar:
-                        if(asientos.size() == 0){Mensaje("Debe seleccionar almenos una butaca."); break;}
-                        else {
+                        if (asientos.size() == 0) {
+                            Mensaje("Debe seleccionar almenos una butaca.");
+                            break;
+                        } else {
                             intento = new Intent(getApplicationContext(), ActivityPagoTiquete.class);
                             startActivity(intento);
                             break;
@@ -204,59 +222,70 @@ public class claseBase extends AppCompatActivity {
                         break;
 
                     case R.id.btn_realiar_pago:
-                        intento = new Intent(getApplicationContext(), MainActivity.class);
-                        InsertarRegistroEnBitacora(intento);
+                        //intento = new Intent(getApplicationContext(), MainActivity.class);
+                        //InsertarRegistroEnBitacora(intento);
+
+                        pagar();
+
+
+
                         break;
                     case R.id.btn_vovler_seleccion_butacas:
                         intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
                         startActivity(intento);
                         break;
-                    default:break; }
+                    default:
+                        break;
+                }
             }
         });
     }// fin de OnclickDelButton
 
-        public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo){
+    public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo) {
         this.cedula = cedula;
-        this.nombre =  nombre;
-        this.apellido =  apellido;
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.correo = correo;
     }
 
-        public void iniciarParametrosTextViewParaBoletos(TextView cant_boletos_edad3, TextView resta_boletos_edad3,
-                                                         TextView suma_boletos_edad3, TextView cant_boletos_adulto,
-                                                         TextView resta_boletos_adulto, TextView suma_boletos_adulto,
-                                                         TextView vista_total, Button btnEscogerCampos){
-            this.cant_boletos_edad3 = cant_boletos_edad3;
-            this.resta_boletos_edad3 = resta_boletos_edad3;
-            this.suma_boletos_edad3 = suma_boletos_edad3;
-            this.cant_boletos_adulto = cant_boletos_adulto;
-            this.resta_boletos_adulto = resta_boletos_adulto;
-            this.suma_boletos_adulto = suma_boletos_adulto;
-            this.vista_total = vista_total;
-            this.btnEscogerCampos = btnEscogerCampos;
-        }
+    public void iniciarParametrosTextViewParaBoletos(TextView cant_boletos_edad3, TextView resta_boletos_edad3,
+                                                     TextView suma_boletos_edad3, TextView cant_boletos_adulto,
+                                                     TextView resta_boletos_adulto, TextView suma_boletos_adulto,
+                                                     TextView vista_total, Button btnEscogerCampos) {
+        this.cant_boletos_edad3 = cant_boletos_edad3;
+        this.resta_boletos_edad3 = resta_boletos_edad3;
+        this.suma_boletos_edad3 = suma_boletos_edad3;
+        this.cant_boletos_adulto = cant_boletos_adulto;
+        this.resta_boletos_adulto = resta_boletos_adulto;
+        this.suma_boletos_adulto = suma_boletos_adulto;
+        this.vista_total = vista_total;
+        this.btnEscogerCampos = btnEscogerCampos;
+    }
 
-        private void EnviarEmail( Intent intento){
-        if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
+    private void EnviarEmail(Intent intento) {
+        if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
             MensajeOK(("Compra realizada exitosamente!"));
             LimpiarListaAsientos();
-            startActivity(intento);
+
+            startActivityForResult(intento, PAYPAL_REQUEST_CODE);
+           // startActivity(intento);
+
         } else {
             MensajeOK("Ocurrio un error a la hora de realizar el pago.");
         }
 
     }
 
-        public void LimpiarListaAsientos(){
+
+    public void LimpiarListaAsientos() {
         vg.getListaAsientos().clear();
     }
 
-    public void LimpiarListaBitacora(){
-            vg.setListaBitacora(null);
+    public void LimpiarListaBitacora() {
+        vg.setListaBitacora(null);
     }
 
-        public String FormatoHora(String hora){
+    public String FormatoHora(String hora) {
         Calendar calendar = GenerarCalendario(hora);
         Date d = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
@@ -264,67 +293,67 @@ public class claseBase extends AppCompatActivity {
         return sdf.format(d);
     }
 
-        private Calendar GenerarCalendario(String hora){
-        int H = Integer.parseInt(hora.substring(0,2));
-        int M = Integer.parseInt(hora.substring(3,5));
+    private Calendar GenerarCalendario(String hora) {
+        int H = Integer.parseInt(hora.substring(0, 2));
+        int M = Integer.parseInt(hora.substring(3, 5));
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY,H);
-        cal.set(Calendar.MINUTE,M);
-        cal.set(Calendar.SECOND,0);
-        cal.set(Calendar.MILLISECOND,0);
+        cal.set(Calendar.HOUR_OF_DAY, H);
+        cal.set(Calendar.MINUTE, M);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
 
-    public void agregarEventos(){
+    public void agregarEventos() {
         resta_boletos_edad3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_edad3 == 0){
+                if (contador_boletos_edad3 == 0) {
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
+                    vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de persona de 3ra edad que remover..");
 
                 }
 
-                if(contador_boletos_edad3 > 0){
+                if (contador_boletos_edad3 > 0) {
                     total_boletos--;
                     contador_boletos_edad3--;
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                } else{
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else {
 
                 }
             }
         });
 
-        suma_boletos_edad3.setOnClickListener(new View.OnClickListener(){
+        suma_boletos_edad3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(contador_boletos_edad3 == 0){
+                if (contador_boletos_edad3 == 0) {
                     contador_boletos_edad3++;
                     total_boletos++;
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                } else if(contador_boletos_edad3 + contador_boletos_adulto < 10){
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_edad3++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
 
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
+                    vista_total.setText("₡ " + String.valueOf(result));
                 } else {
                     Mensaje("Limite de butacas alcanzado.");
                 }
@@ -332,53 +361,55 @@ public class claseBase extends AppCompatActivity {
         });
 
 
-        resta_boletos_adulto.setOnClickListener(new View.OnClickListener(){
+        resta_boletos_adulto.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_adulto == 0){
+                if (contador_boletos_adulto == 0) {
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
+                    vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de adulto que remover..");
                 }
 
-                if(contador_boletos_adulto > 0){
+                if (contador_boletos_adulto > 0) {
                     total_boletos--;
                     contador_boletos_adulto--;
 
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_adulto.setText("" + contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                } else{ }
-            }});
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else {
+                }
+            }
+        });
 
 
         suma_boletos_adulto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_adulto == 0){
+                if (contador_boletos_adulto == 0) {
                     contador_boletos_adulto++;
                     total_boletos++;
 
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    cant_boletos_adulto.setText("" + contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                } else if(contador_boletos_edad3 + contador_boletos_adulto < 10){
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_adulto++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
 
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    cant_boletos_adulto.setText("" + contador_boletos_adulto);
 
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
+                    vista_total.setText("₡ " + String.valueOf(result));
                 } else {
                     Mensaje("Limite de butacas alcanzado.");
                 }
@@ -387,24 +418,24 @@ public class claseBase extends AppCompatActivity {
         });
 
 
-        btnEscogerCampos.setOnClickListener(new View.OnClickListener(){
+        btnEscogerCampos.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
                 int cant_edad3 = Integer.parseInt((cant_boletos_edad3.getText().toString()));
                 int cant_adulto = Integer.parseInt((cant_boletos_edad3.getText().toString()));
-                if(cant_edad3 != 0 || cant_adulto != 0){
+                if (cant_edad3 != 0 || cant_adulto != 0) {
 
                     int total_boletos = Integer.parseInt(cant_boletos_edad3.getText().toString())
                             + Integer.parseInt(cant_boletos_adulto.getText().toString());
 
                     // escriba lo que desea hacer
                     Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
-                    intento.putExtra("total_boletos",total_boletos);
+                    intento.putExtra("total_boletos", total_boletos);
                     startActivity(intento);
 
-                }else{
+                } else {
                     Mensaje("Debe seleccionar cuantos boletos deseea comprar.");
                 }
             }
@@ -412,6 +443,25 @@ public class claseBase extends AppCompatActivity {
         });
 
     }
-    }
+
     /*--------------------------------------------------------------------------------------------*/
 
+//metodos para pago con paypal
+public void pagar() {
+    dinero = "400";
+    PayPalPayment payPalPayment = new PayPalPayment(
+            new BigDecimal(String.valueOf(dinero)),
+            "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
+
+    );
+
+    Intent intent = new Intent(this, PaymentActivity.class);
+    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
+    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+
+    //  startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+    InsertarRegistroEnBitacora(intent);
+
+}
+
+}
