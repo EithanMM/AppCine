@@ -54,11 +54,11 @@ public class MainActivity extends claseBase {
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.FILL); //set indicator animation by using SliderLayout.Animations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
         sliderLayout.setScrollTimeInSec(1); //set scroll delay in seconds :
 
-        setSliderViews();
+        peliculasEnSlider();
 
        // caca();
     }
-    private void setSliderViews() {
+    private void peliculasEnSlider() {
 
         for (int i = 0; i <= 7; i++) {
 
@@ -110,7 +110,6 @@ public class MainActivity extends claseBase {
 
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            final int finalI = i;
             sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
                 @Override
                 public void onSliderClick(SliderView sliderView) {

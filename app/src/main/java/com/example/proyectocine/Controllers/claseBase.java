@@ -240,6 +240,8 @@ public class claseBase extends AppCompatActivity {
                         //intento = new Intent(getApplicationContext(), MainActivity.class);
                         //InsertarRegistroEnBitacora(intento);
 
+
+                        //pago con paypal
                         pagar();
 
 
@@ -485,7 +487,7 @@ public class claseBase extends AppCompatActivity {
 public void pagar(){
     PayPalPayment payPalPayment = new PayPalPayment(
             new BigDecimal(String.valueOf(Integer.toString(vg.getPrecioTotal()))),
-            "USD","DOnate",PayPalPayment.PAYMENT_INTENT_SALE
+            "USD","CineTI",PayPalPayment.PAYMENT_INTENT_SALE
 
     );
 
