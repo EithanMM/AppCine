@@ -1,6 +1,7 @@
 package com.example.proyectocine.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,10 +22,8 @@ import com.example.proyectocine.R;
  * A simple {@link Fragment} subclass.
  */
 public class Fragment_butacas extends Fragment {
-
-    public Fragment_butacas() {
-    }
-
+    private int contador = 0;
+    public Fragment_butacas() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,14 +70,12 @@ public class Fragment_butacas extends Fragment {
     }
 
     public void OnclickDelImageView(View view) {
-        // Ejemplo  OnclickDelImageView(R.id.MiImageView);
-
         ImageView miImageView = (ImageView)  view;
-        //  final String msg = miImageView.getText().toString();       // 2.  Programar el evento onclick
+        final VariablesGlobales vg = VariablesGlobales.getInstance();
         miImageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // if(msg.equals("Texto")){Mensaje("Texto en el botón ");};
+
                 switch (v.getId()) {
 
                     case R.id.A1:
@@ -243,370 +240,489 @@ public class Fragment_butacas extends Fragment {
         switch(tag){
 
             case "DA1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SA1");
-                AgregarButacaEnLista(vg,"A1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SA1");
+                    AgregarButacaEnLista(vg,"A1");
+                }
                 break;
 
             case "DA2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SA2");
-                AgregarButacaEnLista(vg,"A2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SA2");
+                    AgregarButacaEnLista(vg,"A2");
+                }
                 break;
 
             case "DA3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SA3");
-                AgregarButacaEnLista(vg,"A3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SA3");
+                    AgregarButacaEnLista(vg,"A3");
+                }
                 break;
 
             case "DA4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SA4");
-                AgregarButacaEnLista(vg,"A4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SA4");
+                    AgregarButacaEnLista(vg,"A4");
+                }
                 break;
 
             case "DA5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("OA5");
-                AgregarButacaEnLista(vg,"A5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("OA5");
+                    AgregarButacaEnLista(vg,"A5");
+                }
                 break;
 
             case "DB1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SB1");
-                AgregarButacaEnLista(vg,"B1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SB2");
+                    AgregarButacaEnLista(vg,"B2");
+                }
                 break;
 
             case "DB2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SB2");
-                AgregarButacaEnLista(vg,"B2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SB2");
+                    AgregarButacaEnLista(vg,"B2");
+                }
                 break;
 
             case "DB3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SB3");
-                AgregarButacaEnLista(vg,"B3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SB3");
+                    AgregarButacaEnLista(vg,"B3");
+                }
                 break;
 
             case "DB4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SB4");
-                AgregarButacaEnLista(vg,"B4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SB4");
+                    AgregarButacaEnLista(vg,"B4");
+                }
                 break;
 
             case "DB5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SB5");
-                AgregarButacaEnLista(vg,"B5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SB5");
+                    AgregarButacaEnLista(vg,"B5");
+                }
                 break;
 
             case "DC1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SC1");
-                AgregarButacaEnLista(vg,"C1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SC1");
+                    AgregarButacaEnLista(vg,"C1");
+                }
                 break;
 
             case "DC2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SC2");
-                AgregarButacaEnLista(vg,"C2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SC2");
+                    AgregarButacaEnLista(vg,"C2");
+                }
                 break;
 
             case "DC3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SC3");
-                AgregarButacaEnLista(vg,"C3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SC3");
+                    AgregarButacaEnLista(vg,"C3");
+                }
                 break;
 
             case "DC4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SC4");
-                AgregarButacaEnLista(vg,"C4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SC5");
+                    AgregarButacaEnLista(vg,"C5");
+                }
                 break;
 
             case "DC5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SC5");
-                AgregarButacaEnLista(vg,"C5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SC5");
+                    AgregarButacaEnLista(vg,"C5");
+                }
                 break;
 
             case "DD1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SD1");
-                AgregarButacaEnLista(vg,"D1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SD1");
+                    AgregarButacaEnLista(vg,"D1");
+                }
                 break;
 
             case "DD2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SD2");
-                AgregarButacaEnLista(vg,"D2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SD2");
+                    AgregarButacaEnLista(vg,"D2");
+                }
                 break;
 
             case "DD3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SD3");
-                AgregarButacaEnLista(vg,"D3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SD3");
+                    AgregarButacaEnLista(vg,"D3");
+                }
                 break;
 
             case "DD4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SD4");
-                AgregarButacaEnLista(vg,"D4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SD4");
+                    AgregarButacaEnLista(vg,"D4");
+                }
                 break;
 
             case "DD5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SD5");
-                AgregarButacaEnLista(vg,"D5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SD5");
+                    AgregarButacaEnLista(vg,"D5");
+                }
                 break;
 
             case "DE1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SE1");
-                AgregarButacaEnLista(vg,"E1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SE1");
+                    AgregarButacaEnLista(vg,"E1");
+                }
                 break;
 
             case "DE2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SE2");
-                AgregarButacaEnLista(vg,"E2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SE2");
+                    AgregarButacaEnLista(vg,"E2");
+                }
                 break;
 
             case "DE3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SE3");
-                AgregarButacaEnLista(vg,"E3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SE3");
+                    AgregarButacaEnLista(vg,"E3");
+                }
                 break;
 
             case "DE4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SE4");
-                AgregarButacaEnLista(vg,"E4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SE4");
+                    AgregarButacaEnLista(vg,"E4");
+                }
                 break;
 
             case "DE5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SE5");
-                AgregarButacaEnLista(vg,"E5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SE5");
+                    AgregarButacaEnLista(vg,"E5");
+                }
                 break;
 
             case "DF1":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SF1");
-                AgregarButacaEnLista(vg,"F1");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SF1");
+                    AgregarButacaEnLista(vg,"F1");
+                }
                 break;
 
             case "DF2":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SF2");
-                AgregarButacaEnLista(vg,"F2");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SF2");
+                    AgregarButacaEnLista(vg,"F2");
+                }
                 break;
 
             case "DF3":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SF3");
-                AgregarButacaEnLista(vg,"F3");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SF3");
+                    AgregarButacaEnLista(vg,"F3");
+                }
                 break;
 
             case "DF4":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SF4");
-                AgregarButacaEnLista(vg,"F4");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SF4");
+                    AgregarButacaEnLista(vg,"F4");
+                }
                 break;
 
             case "DF5":
-                midib.setImageResource(R.drawable.butaca_seleccionada);
-                midib.setTag("SF5");
-                AgregarButacaEnLista(vg,"F5");
+                if(PermitirIncremento()){
+                    midib.setImageResource(R.drawable.butaca_seleccionada);
+                    midib.setTag("SF5");
+                    AgregarButacaEnLista(vg,"F5");
+                }
                 break;
 
 
             case "SA1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"A1");
-                midib.setTag("DA1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"A1");
+                    midib.setTag("DA1");
+                }
                 break;
 
             case "SA2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"A2");
-                midib.setTag("DA2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"A2");
+                    midib.setTag("DA2");
+                }
                 break;
 
             case "SA3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"A3");
-                midib.setTag("DA3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"A3");
+                    midib.setTag("DA3");
+                }
                 break;
 
             case "SA4":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"A4");
-                midib.setTag("DA4");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"A4");
+                    midib.setTag("DA4");
+                }
                 break;
 
             case "SA5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"A5");
-                midib.setTag("DA5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"A5");
+                    midib.setTag("DA5");
+                }
                 break;
 
             case "SB1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"B1");
-                midib.setTag("DB1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"B1");
+                    midib.setTag("DB1");
+                }
                 break;
 
             case "SB2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"B2");
-                midib.setTag("DB2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"B2");
+                    midib.setTag("DB2");
+                }
                 break;
 
             case "SB3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"B3");
-                midib.setTag("DB3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"B3");
+                    midib.setTag("DB3");
+                }
                 break;
 
             case "SB4":
+                if(PermitirDecremento()){}
                 midib.setImageResource(R.drawable.butaca_mediana);
                 EliminarButacaEnLista(vg,"B4");
                 midib.setTag("DB4");
                 break;
 
             case "SB5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"B5");
-                midib.setTag("DB5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"B5");
+                    midib.setTag("DB5");
+                }
                 break;
 
             case "SC1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"C1");
-                midib.setTag("DC1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"C1");
+                    midib.setTag("DC1");
+                }
                 break;
 
             case "SC2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"C2");
-                midib.setTag("DC2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"C2");
+                    midib.setTag("DC2");
+                }
                 break;
 
             case "SC3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"C3");
-                midib.setTag("DC3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"C3");
+                    midib.setTag("DC3");
+                }
                 break;
 
             case "SC4":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"C4");
-                midib.setTag("DC4");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"C4");
+                    midib.setTag("DC4");
+                }
                 break;
 
             case "SC5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"C5");
-                midib.setTag("DC5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"C5");
+                    midib.setTag("DC5");
+                }
                 break;
 
             case "SD1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"D1");
-                midib.setTag("DD1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"D1");
+                    midib.setTag("DD1");
+                }
                 break;
 
             case "SD2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"D2");
-                midib.setTag("DD2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"D2");
+                    midib.setTag("DD2");
+                }
                 break;
 
             case "SD3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"D3");
-                midib.setTag("DD3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"D3");
+                    midib.setTag("DD3");
+                }
                 break;
 
             case "SD4":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"D4");
-                midib.setTag("DD4");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"D4");
+                    midib.setTag("DD4");
+                }
                 break;
 
             case "SD5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"D5");
-                midib.setTag("DD5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"D5");
+                    midib.setTag("DD5");
+                }
                 break;
 
             case "SE1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"E1");
-                midib.setTag("DE1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"E1");
+                    midib.setTag("DE1");
+                }
                 break;
 
             case "SE2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"E2");
-                midib.setTag("DE2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"E2");
+                    midib.setTag("DE2");
+                }
                 break;
 
             case "SE3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"E3");
-                midib.setTag("DE3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"E3");
+                    midib.setTag("DE3");
+                }
                 break;
 
             case "SE4":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"E4");
-                midib.setTag("DE4");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"E4");
+                    midib.setTag("DE4");
+                }
                 break;
 
             case "SE5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"E5");
-                midib.setTag("DE5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"E5");
+                    midib.setTag("DE5");
+                }
                 break;
 
             case "SF1":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"F1");
-                midib.setTag("DF1");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"F1");
+                    midib.setTag("DF1");
+                }
                 break;
 
             case "SF2":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"F2");
-                midib.setTag("DF2");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"F2");
+                    midib.setTag("DF2");
+                }
                 break;
 
             case "SF3":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"F3");
-                midib.setTag("DF3");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"F3");
+                    midib.setTag("DF3");
+                }
                 break;
 
             case "SF4":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"F4");
-                midib.setTag("DF4");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"F4");
+                    midib.setTag("DF4");
+                }
                 break;
 
             case "SF5":
-                midib.setImageResource(R.drawable.butaca_mediana);
-                EliminarButacaEnLista(vg,"F5");
-                midib.setTag("DF5");
+                if(PermitirDecremento()){
+                    midib.setImageResource(R.drawable.butaca_mediana);
+                    EliminarButacaEnLista(vg,"F5");
+                    midib.setTag("DF5");
+                }
                 break;
         }
         TransmitirButacasAEditText(vg);
     }
 
-    public void TransmitirButacasAEditText(VariablesGlobales vg){
+    private void TransmitirButacasAEditText(VariablesGlobales vg){
         int tam = vg.getListaAsientos().size();
         TextView input = vg.getTextHelper();
         String dato = "";
@@ -621,9 +737,9 @@ public class Fragment_butacas extends Fragment {
             }
     }
 
-    public void Mensaje(String msg){ Toast.makeText(getActivity(), msg,Toast.LENGTH_SHORT).show();};
+    private void Mensaje(String msg){ Toast.makeText(getActivity(), msg,Toast.LENGTH_SHORT).show();};
 
-    public void AgregarButacaEnLista(VariablesGlobales vg, String butaca){
+    private void AgregarButacaEnLista(VariablesGlobales vg, String butaca){
         int tam = vg.getListaAsientos().size();
         if(tam < 10){
             vg.getListaAsientos().add(butaca);
@@ -632,13 +748,13 @@ public class Fragment_butacas extends Fragment {
         }
     }
 
-    public void EliminarButacaEnLista(VariablesGlobales vg, String butaca){
+    private void EliminarButacaEnLista(VariablesGlobales vg, String butaca){
         vg.getListaAsientos().remove(butaca);
         TextView input = vg.getTextHelper();
         input.setText("");
     }
 
-    public void ObtenerButacasOcupadasPorFuncion(VariablesGlobales vg){
+    private void ObtenerButacasOcupadasPorFuncion(VariablesGlobales vg){
         if(vg.getListaBitacora() != null) {
             TableLayout tabla = vg.getTablaButacas();
             TableRow fila;
@@ -655,6 +771,23 @@ public class Fragment_butacas extends Fragment {
                     }
                 }
             }
+        }
+    }
+
+    private boolean PermitirIncremento(){
+        VariablesGlobales vg = VariablesGlobales.getInstance();
+        if(contador < vg.getButacasSeleccionadas()){
+            contador++;
+            return true;
+        } else {return false;}
+    }
+
+    private boolean PermitirDecremento(){
+        VariablesGlobales vg = VariablesGlobales.getInstance();
+        if(contador == 0 || contador < 0){return false;}
+        else{
+            contador--;
+            return true;
         }
     }
 

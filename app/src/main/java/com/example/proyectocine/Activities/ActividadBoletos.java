@@ -46,6 +46,8 @@ public class ActividadBoletos extends claseBase {
                                              resta_boletos_adulto,suma_boletos_adulto,
                                              vista_total,btnEscogerCampos);
 
+
+
         agregarEventos();
 
 

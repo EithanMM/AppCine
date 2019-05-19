@@ -41,6 +41,8 @@ public class MainActivity extends claseBase {
         LlenarListaObjetos();
         LlenarListView();
         RegistrarClicks();
+
+       // caca();
     }
 
     private List<ObjetosxDesplegar> misObjetos = new ArrayList<ObjetosxDesplegar>();
