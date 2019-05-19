@@ -99,9 +99,9 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/imageView16"
+            android:id="@+id/imagen_inicio"
             android:layout_width="wrap_content"
-            android:layout_height="229dp"
+            android:layout_height="196dp"
             app:layout_constraintBottom_toTopOf="@+id/textView23"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -118,7 +118,7 @@
             android:textColor="@android:color/background_light"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/imageView16"
+            app:layout_constraintBottom_toTopOf="@+id/imagen_inicio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

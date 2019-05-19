@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.example.proyectocine.R;
 
@@ -113,6 +116,14 @@ public class Bienvenida extends AppCompatActivity {
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
        // findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.acerca_imagen_inicio);
+        ImageView Mi_imageview = (ImageView) findViewById(R.id.imagen_inicio);
+        Mi_imageview.startAnimation(animation);
+
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
