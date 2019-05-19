@@ -44,7 +44,6 @@ public class ActivityPagoTiquete extends claseBase {
     //metodos para pago con paypal
 
 
-
     @Override
     protected void onDestroy() {
         stopService(new Intent(this, PaymentActivity.class));

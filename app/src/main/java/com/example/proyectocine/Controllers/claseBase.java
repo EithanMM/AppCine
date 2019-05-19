@@ -265,7 +265,7 @@ public class claseBase extends AppCompatActivity {
 
     private void EnviarEmail(Intent intento) {
         if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
-            MensajeOK(("Compra realizada exitosamente!"));
+           // MensajeOK(("Compra realizada exitosamente!"));
             LimpiarListaAsientos();
 
             startActivityForResult(intento, PAYPAL_REQUEST_CODE);
@@ -314,7 +314,8 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de persona de 3ra edad que remover..");
 
@@ -326,7 +327,8 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
 
@@ -344,7 +346,8 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_edad3++;
@@ -353,7 +356,8 @@ public class claseBase extends AppCompatActivity {
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
 
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
                     Mensaje("Limite de butacas alcanzado.");
@@ -371,7 +375,8 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de adulto que remover..");
                 }
@@ -382,6 +387,7 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    dinero = Integer.toString(result);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
@@ -400,7 +406,8 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_adulto++;
@@ -409,7 +416,8 @@ public class claseBase extends AppCompatActivity {
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
 
                      result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
-                    vg.setPrecioTotal(result);
+                    dinero = Integer.toString(result);
+                     vg.setPrecioTotal(result);
 
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
@@ -449,21 +457,22 @@ public class claseBase extends AppCompatActivity {
     /*--------------------------------------------------------------------------------------------*/
 
 //metodos para pago con paypal
-public void pagar() {
 
-    PayPalPayment payPalPayment = new PayPalPayment(
-            new BigDecimal(result),
-            "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
+    public void pagar() {
+String total = Integer.toString(vg.getPrecioTotal());
+        int y=result;
+        PayPalPayment payPalPayment = new PayPalPayment(
+                new BigDecimal(String.valueOf(total)),
+                "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
 
-    );
+        );
 
-    Intent intent = new Intent(this, PaymentActivity.class);
-    intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
-    intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
 
-    //  startActivityForResult(intent, PAYPAL_REQUEST_CODE);
-    InsertarRegistroEnBitacora(intent);
+        //  startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+        InsertarRegistroEnBitacora(intent);
 
-}
-
+    }
 }
