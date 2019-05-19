@@ -1,8 +1,10 @@
 package com.example.proyectocine.Controllers;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,19 @@ import android.widget.Toast;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
+import com.example.proyectocine.Activities.PaymentDetailsActivity;
 import com.example.proyectocine.Data.DBAdapterSQL;
 import com.example.proyectocine.Helpers.GmailHelper;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.R;
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,6 +55,16 @@ public class claseBase extends AppCompatActivity {
     private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
             cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
             ,vista_total;
+
+
+    //views para detalles de pago paypal
+    public static final String PAYPAL_CLIENT_ID = "AXPLEB3uBxOGOCVsumxfmEofmN6m7CocpInV827k3MeeOWFO47YgBSX4ZMl2WtMa0K0GpJcfOuqcRUIX";
+    TextView txt_id, txt_monto, txt_status;
+    public String dinero;
+    public int result;
+    public static  final int PAYPAL_REQUEST_CODE = 7171;
+    public PayPalConfiguration configuration = new PayPalConfiguration().environment(
+            PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(PAYPAL_CLIENT_ID);
 
     private Button btnEscogerCampos;
     private int contador_boletos_edad3  = 0;
@@ -203,8 +222,10 @@ public class claseBase extends AppCompatActivity {
                 switch (v.getId()) {
 
                     case R.id.btn_continuar:
-                        if(asientos.size() == 0){Mensaje("Debe seleccionar almenos una butaca."); break;}
-                        else {
+                        if (asientos.size() == 0) {
+                            Mensaje("Debe seleccionar almenos una butaca.");
+                            break;
+                        } else {
                             intento = new Intent(getApplicationContext(), ActivityPagoTiquete.class);
                             startActivity(intento);
                             break;
@@ -216,14 +237,21 @@ public class claseBase extends AppCompatActivity {
                         break;
 
                     case R.id.btn_realiar_pago:
-                        intento = new Intent(getApplicationContext(), MainActivity.class);
-                        InsertarRegistroEnBitacora(intento);
+                        //intento = new Intent(getApplicationContext(), MainActivity.class);
+                        //InsertarRegistroEnBitacora(intento);
+
+                        pagar();
+
+
+
                         break;
                     case R.id.btn_vovler_seleccion_butacas:
                         intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
                         startActivity(intento);
                         break;
-                    default:break; }
+                    default:
+                        break;
+                }
             }
         });
     }// fin de OnclickDelButton
@@ -249,21 +277,17 @@ public class claseBase extends AppCompatActivity {
             this.btnEscogerCampos = btnEscogerCampos;
         }
 
-        private void EnviarEmail( Intent intento){
-            if(Validaciones(cedula, nombre, apellido, correo)){
+    private void EnviarEmail(Intent intento) {
+        if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
+            MensajeOK(("Compra realizada exitosamente!"));
+            LimpiarListaAsientos();
 
-                if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
-                    MensajeOK(("Compra realizada exitosamente!"));
-                    LimpiarListaAsientos();
-                    startActivity(intento);
-                } else {
-                    MensajeOK("Ocurrio un error a la hora de realizar el pago.");
-                }
-            }
-    }
+            startActivityForResult(intento, PAYPAL_REQUEST_CODE);
+            // startActivity(intento);
 
-    public void caca(){
-            MensajeOK(gh.Desencriptar("Ap0KhEYA9jZcy/DO6wan0w=="));
+        } else {
+            MensajeOK("Ocurrio un error a la hora de realizar el pago.");
+        }
     }
 
     private boolean Validaciones(TextView cedula, TextView nombre, TextView apellido, TextView correo){
@@ -309,8 +333,8 @@ public class claseBase extends AppCompatActivity {
         vg.getListaAsientos().clear();
     }
 
-        public void LimpiarListaBitacora(){
-            vg.setListaBitacora(null);
+    public void LimpiarListaBitacora() {
+        vg.setListaBitacora(null);
     }
 
         public String FormatoHora(String hora){
@@ -321,14 +345,14 @@ public class claseBase extends AppCompatActivity {
         return sdf.format(d);
     }
 
-        private Calendar GenerarCalendario(String hora){
-        int H = Integer.parseInt(hora.substring(0,2));
-        int M = Integer.parseInt(hora.substring(3,5));
+    private Calendar GenerarCalendario(String hora) {
+        int H = Integer.parseInt(hora.substring(0, 2));
+        int M = Integer.parseInt(hora.substring(3, 5));
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY,H);
-        cal.set(Calendar.MINUTE,M);
-        cal.set(Calendar.SECOND,0);
-        cal.set(Calendar.MILLISECOND,0);
+        cal.set(Calendar.HOUR_OF_DAY, H);
+        cal.set(Calendar.MINUTE, M);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         return cal;
     }
 
@@ -437,6 +461,7 @@ public class claseBase extends AppCompatActivity {
 
                 if(contador_boletos_adulto == 0){
                     contador_boletos_adulto++;
+                    total_boletos++;
 
                     total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_adulto.setText(""+contador_boletos_adulto);
@@ -459,6 +484,7 @@ public class claseBase extends AppCompatActivity {
                     Mensaje("Limite de butacas alcanzado.");
                 }
             }
+
         });
 
 
@@ -484,7 +510,26 @@ public class claseBase extends AppCompatActivity {
             }
 
         });
-      }
+
+    }
+
+    //metodos para pago con paypal
+    public void pagar() {
+
+        PayPalPayment payPalPayment = new PayPalPayment(
+                new BigDecimal(result),
+                "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
+
+        );
+
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
+
+        //  startActivityForResult(intent, PAYPAL_REQUEST_CODE);
+        InsertarRegistroEnBitacora(intent);
+
+    }
+
     }
     /*--------------------------------------------------------------------------------------------*/
-
