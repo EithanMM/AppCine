@@ -1,13 +1,16 @@
 package com.example.proyectocine.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -20,26 +23,14 @@ import com.example.proyectocine.R;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class Bienvenida extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
+public class Bienvenida extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
+
     private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private View mContentView;
+    private GestureDetector gestos;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -76,11 +67,6 @@ public class Bienvenida extends AppCompatActivity {
             hide();
         }
     };
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
     private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -99,6 +85,8 @@ public class Bienvenida extends AppCompatActivity {
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         getSupportActionBar().setTitle("Bienvenidos");
 
+        gestos = new GestureDetector(this, this);
+
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
@@ -115,7 +103,7 @@ public class Bienvenida extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-       // findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        // findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
 
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.acerca_imagen_inicio);
@@ -123,15 +111,18 @@ public class Bienvenida extends AppCompatActivity {
         Mi_imageview.startAnimation(animation);
 
 
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intento = new Intent(Bienvenida.this, MainActivity.class);
-                startActivity(intento);
+                pasar();
 
             }
-        },4000);
+        }, 4000);
+    }
+
+    private void pasar() {
+        Intent intento = new Intent(Bienvenida.this, MainActivity.class);
+        startActivity(intento);
     }
 
     @Override
@@ -178,12 +169,72 @@ public class Bienvenida extends AppCompatActivity {
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY);
     }
 
-    /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
-     * previously scheduled calls.
-     */
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+        pasar();
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+        pasar();
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        pasar();
+        return true;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        gestos.onTouchEvent(event);
+        pasar();
+        return super.onTouchEvent(event);
+    }
+
+
+
+
+
 }
