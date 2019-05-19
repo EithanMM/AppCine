@@ -2,6 +2,7 @@ package com.example.proyectocine.Activities;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,7 +24,8 @@ public class ActividadBoletos extends claseBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actividad_boletos);
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        getSupportActionBar().setTitle("Cantidad de boletos");
 
 
       //  btnEscogerCampos = (Button) findViewById(R.id.btnEscogerCampos);

@@ -10,23 +10,27 @@
     <ListView
         android:id="@+id/list_view_peliculas"
         android:layout_width="395dp"
-        android:layout_height="470dp"
+        android:layout_height="411dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/imageSlider"
         app:layout_constraintVertical_bias="0.196" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="395dp"
-        android:layout_height="173dp"
-        android:background="@drawable/bohemian2"
-        android:orientation="horizontal"
+    <com.smarteist.autoimageslider.SliderLayout
+        android:id="@+id/imageSlider"
+        android:layout_width="match_parent"
+        android:layout_height="245dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/list_view_peliculas"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

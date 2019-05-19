@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
@@ -19,6 +20,10 @@ import com.example.proyectocine.Helpers.ObjetosxDesplegar;
 import com.example.proyectocine.R;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.Controllers.claseBase;
+import com.smarteist.autoimageslider.DefaultSliderView;
+import com.smarteist.autoimageslider.IndicatorAnimations;
+import com.smarteist.autoimageslider.SliderLayout;
+import com.smarteist.autoimageslider.SliderView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +31,7 @@ import java.util.List;
 public class MainActivity extends claseBase {
     //Esto es una prueba desde el proyecto.
     SharedPreferences prefs = null;
+    SliderLayout sliderLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +48,79 @@ public class MainActivity extends claseBase {
         LlenarListView();
         RegistrarClicks();
 
+
+
+        sliderLayout = findViewById(R.id.imageSlider);
+        sliderLayout.setIndicatorAnimation(IndicatorAnimations.FILL); //set indicator animation by using SliderLayout.Animations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        sliderLayout.setScrollTimeInSec(1); //set scroll delay in seconds :
+
+        setSliderViews();
+
        // caca();
+    }
+    private void setSliderViews() {
+
+        for (int i = 0; i <= 7; i++) {
+
+            DefaultSliderView sliderView = new DefaultSliderView(this);
+
+            switch (i) {
+                case 0:
+                    sliderView.setImageDrawable(R.drawable.bohemian);
+                    sliderView.setDescription("Bohemian Rhapsody");
+
+                    break;
+                case 1:
+                    sliderView.setImageDrawable(R.drawable.cementerio_maldito);
+                    sliderView.setDescription("Cementerio Maldito");
+
+                    break;
+                case 2:
+                    sliderView.setImageDrawable(R.drawable.capitana_marvel);
+                    sliderView.setDescription("Capitana Marvel");
+
+                    break;
+                case 3:
+                    sliderView.setImageDrawable(R.drawable.infinity_war);
+                    sliderView.setDescription("Avengers");
+
+                    break;
+                case 4:
+                    sliderView.setImageDrawable(R.drawable.pasion_cristo);
+                    sliderView.setDescription("La Pasión de Cristo");
+
+                    break;
+                case 5:
+                    sliderView.setImageDrawable(R.drawable.the_ring);
+                    sliderView.setDescription("El Aro");
+
+                    break;
+                case 6:
+                    sliderView.setImageDrawable(R.drawable.doctor_strange);
+                    sliderView.setDescription("Doctor Strange");
+
+                    break;
+                case 7:
+                    sliderView.setImageDrawable(R.drawable.coco);
+                    sliderView.setDescription("Coco");
+
+                    break;
+
+            }
+
+            sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            final int finalI = i;
+            sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
+                @Override
+                public void onSliderClick(SliderView sliderView) {
+                    Toast.makeText(MainActivity.this, "Sería tuanis mandarlo al activity de Antohny", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //at last add this view in your layout :
+            sliderLayout.addSliderView(sliderView);
+        }
     }
 
     private List<ObjetosxDesplegar> misObjetos = new ArrayList<ObjetosxDesplegar>();
