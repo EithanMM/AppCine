@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class claseBase extends AppCompatActivity {
 
@@ -51,6 +53,16 @@ public class claseBase extends AppCompatActivity {
     private final int PRECIO_BOLETO_ADULTO = 3200;
     private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
     private int total_boletos = 0;
+
+
+    private String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|" +
+            "\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\" +
+            "x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|" +
+            "\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]" +
+            "*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7" +
+            "f])+)\\])";
+
+    private String NAME_REGEX = "^\\s*[a-zA-Z,\\sÁÉÍÓÚáéíóú]+\\s*$";
 
 
     public void MensajeOK(String msg) {
@@ -238,21 +250,66 @@ public class claseBase extends AppCompatActivity {
         }
 
         private void EnviarEmail( Intent intento){
-        if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
-            MensajeOK(("Compra realizada exitosamente!"));
-            LimpiarListaAsientos();
-            startActivity(intento);
-        } else {
-            MensajeOK("Ocurrio un error a la hora de realizar el pago.");
-        }
+            if(Validaciones(cedula, nombre, apellido, correo)){
 
+                if(gh.EnviarEmail(cedula, nombre, apellido, correo, vg)){
+                    MensajeOK(("Compra realizada exitosamente!"));
+                    LimpiarListaAsientos();
+                    startActivity(intento);
+                } else {
+                    MensajeOK("Ocurrio un error a la hora de realizar el pago.");
+                }
+            }
+    }
+
+    public void caca(){
+            MensajeOK(gh.Desencriptar("Ap0KhEYA9jZcy/DO6wan0w=="));
+    }
+
+    private boolean Validaciones(TextView cedula, TextView nombre, TextView apellido, TextView correo){
+            boolean respuesta = false;
+            Pattern name_pattern = Pattern.compile(NAME_REGEX);
+            Pattern first_last_name_pattern = Pattern.compile(NAME_REGEX);
+            Pattern email_pattern = Pattern.compile(EMAIL_REGEX);
+
+            Matcher matcher1 = name_pattern.matcher(nombre.getText().toString());
+            Matcher matcher2 = first_last_name_pattern.matcher(apellido.getText().toString());
+            Matcher matcher3 = email_pattern.matcher(correo.getText().toString());
+
+
+            if(cedula.getText().toString().equals("")){
+                MensajeOK("Debe digitar una cédula por favor.");
+                return respuesta;
+
+            } else if(nombre.getText().toString().equals("")){
+                MensajeOK("Debe digitar un nombre por favor.");
+                return respuesta;
+            } else if(!matcher1.find()){
+                MensajeOK("El nombre ingresado posee caracteres no validos.");
+                return respuesta;
+            } else if(apellido.getText().toString().equals("")){
+                MensajeOK("Debe ingresar un apellido por favor.");
+                return respuesta;
+            } else if(!matcher2.find()){
+                MensajeOK("El o los apellidos ingresados poseen caracteres no validos.");
+                return respuesta;
+            } else if(correo.getText().toString().equals("")){
+                MensajeOK("Debe digitar un correo electrónico por favor.");
+                return respuesta;
+            } else if(!matcher3.find()){
+                MensajeOK("El correo ingresado no es válido, favor ingresar un correo válido.");
+                return respuesta;
+            } else {
+                respuesta = true;
+            }
+            return respuesta;
     }
 
         public void LimpiarListaAsientos(){
         vg.getListaAsientos().clear();
     }
 
-    public void LimpiarListaBitacora(){
+        public void LimpiarListaBitacora(){
             vg.setListaBitacora(null);
     }
 
@@ -275,14 +332,18 @@ public class claseBase extends AppCompatActivity {
         return cal;
     }
 
-    public void agregarEventos(){
+        public void agregarEventos(){
+
         resta_boletos_edad3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(contador_boletos_edad3 == 0){
 
+                    total_boletos =  contador_boletos_adulto;
                     cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    vg.setButacasSeleccionadas(total_boletos);
+
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -294,7 +355,10 @@ public class claseBase extends AppCompatActivity {
                     total_boletos--;
                     contador_boletos_edad3--;
 
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    vg.setButacasSeleccionadas(total_boletos);
+
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -310,18 +374,21 @@ public class claseBase extends AppCompatActivity {
             public void onClick(View v) {
                 if(contador_boletos_edad3 == 0){
                     contador_boletos_edad3++;
-                    total_boletos++;
 
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    vg.setButacasSeleccionadas(total_boletos);
+
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
                 } else if(contador_boletos_edad3 + contador_boletos_adulto < 10){
                     contador_boletos_edad3++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
 
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_edad3.setText(""+contador_boletos_edad3);
 
+                    vg.setButacasSeleccionadas(total_boletos);
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -339,7 +406,10 @@ public class claseBase extends AppCompatActivity {
 
                 if(contador_boletos_adulto == 0){
 
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+
+                    vg.setButacasSeleccionadas(total_boletos);
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -350,7 +420,10 @@ public class claseBase extends AppCompatActivity {
                     total_boletos--;
                     contador_boletos_adulto--;
 
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_adulto.setText(""+contador_boletos_adulto);
+
+                    vg.setButacasSeleccionadas(total_boletos);
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -364,9 +437,11 @@ public class claseBase extends AppCompatActivity {
 
                 if(contador_boletos_adulto == 0){
                     contador_boletos_adulto++;
-                    total_boletos++;
 
+                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
                     cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    vg.setButacasSeleccionadas(total_boletos);
+
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ "+String.valueOf(result));
@@ -375,6 +450,7 @@ public class claseBase extends AppCompatActivity {
                     total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
 
                     cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    vg.setButacasSeleccionadas(total_boletos);
 
                     int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
@@ -383,7 +459,6 @@ public class claseBase extends AppCompatActivity {
                     Mensaje("Limite de butacas alcanzado.");
                 }
             }
-
         });
 
 
@@ -393,7 +468,7 @@ public class claseBase extends AppCompatActivity {
             public void onClick(View arg0) {
 
                 int cant_edad3 = Integer.parseInt((cant_boletos_edad3.getText().toString()));
-                int cant_adulto = Integer.parseInt((cant_boletos_edad3.getText().toString()));
+                int cant_adulto = Integer.parseInt((cant_boletos_adulto.getText().toString()));
                 if(cant_edad3 != 0 || cant_adulto != 0){
 
                     int total_boletos = Integer.parseInt(cant_boletos_edad3.getText().toString())
@@ -401,7 +476,6 @@ public class claseBase extends AppCompatActivity {
 
                     // escriba lo que desea hacer
                     Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
-                    intento.putExtra("total_boletos",total_boletos);
                     startActivity(intento);
 
                 }else{
@@ -410,8 +484,7 @@ public class claseBase extends AppCompatActivity {
             }
 
         });
-
-    }
+      }
     }
     /*--------------------------------------------------------------------------------------------*/
 

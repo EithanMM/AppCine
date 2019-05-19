@@ -179,7 +179,7 @@ public class GmailHelper {
         return value;
     }
 
-    private String Desencriptar( String value) {
+    public String Desencriptar( String value) {
         try {
             DESKeySpec keySpec = new DESKeySpec(cryptoPass.getBytes("UTF8"));
             SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");

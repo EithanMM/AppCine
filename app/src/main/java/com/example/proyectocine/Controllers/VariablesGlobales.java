@@ -12,6 +12,7 @@ public class VariablesGlobales {
 
     private ArrayList<String> ListaAsientos = new ArrayList<>();
     private ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
+
     private TextView TextHelper;
     private TableLayout TablaButacas;
     private String idPelicula;
@@ -22,6 +23,7 @@ public class VariablesGlobales {
 
     private int precioTotal;
     private int totalButacas = 10;
+    private int butacasSeleccionadas = 0;
 
     private static VariablesGlobales instance = null;
 
@@ -113,5 +115,13 @@ public class VariablesGlobales {
 
     public int getTotalButacas() {
         return totalButacas;
+    }
+
+    public int getButacasSeleccionadas() {
+        return butacasSeleccionadas;
+    }
+
+    public void setButacasSeleccionadas(int butacasSeleccionadas) {
+        this.butacasSeleccionadas = butacasSeleccionadas;
     }
 }
