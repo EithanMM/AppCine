@@ -57,6 +57,7 @@ public class claseBase extends AppCompatActivity {
     public static final String PAYPAL_CLIENT_ID = "AXPLEB3uBxOGOCVsumxfmEofmN6m7CocpInV827k3MeeOWFO47YgBSX4ZMl2WtMa0K0GpJcfOuqcRUIX";
     TextView txt_id, txt_monto, txt_status;
     public String dinero;
+    public int result;
     public static  final int PAYPAL_REQUEST_CODE = 7171;
     public PayPalConfiguration configuration = new PayPalConfiguration().environment(
             PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(PAYPAL_CLIENT_ID);
@@ -312,7 +313,7 @@ public class claseBase extends AppCompatActivity {
                 if (contador_boletos_edad3 == 0) {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de persona de 3ra edad que remover..");
@@ -324,7 +325,7 @@ public class claseBase extends AppCompatActivity {
                     contador_boletos_edad3--;
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
@@ -342,7 +343,7 @@ public class claseBase extends AppCompatActivity {
                     total_boletos++;
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
@@ -351,7 +352,7 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
 
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
@@ -369,7 +370,7 @@ public class claseBase extends AppCompatActivity {
                 if (contador_boletos_adulto == 0) {
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                     Mensaje("Sin mas butacas de adulto que remover..");
@@ -380,7 +381,7 @@ public class claseBase extends AppCompatActivity {
                     contador_boletos_adulto--;
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
@@ -398,7 +399,7 @@ public class claseBase extends AppCompatActivity {
                     total_boletos++;
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
@@ -407,8 +408,9 @@ public class claseBase extends AppCompatActivity {
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
 
-                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
+
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else {
                     Mensaje("Limite de butacas alcanzado.");
@@ -448,9 +450,9 @@ public class claseBase extends AppCompatActivity {
 
 //metodos para pago con paypal
 public void pagar() {
-    dinero = "400";
+
     PayPalPayment payPalPayment = new PayPalPayment(
-            new BigDecimal(String.valueOf(dinero)),
+            new BigDecimal(result),
             "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
 
     );

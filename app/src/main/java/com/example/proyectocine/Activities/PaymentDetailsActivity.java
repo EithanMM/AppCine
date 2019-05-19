@@ -1,6 +1,8 @@
 package com.example.proyectocine.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ public class PaymentDetailsActivity extends claseBase {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_details);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        getSupportActionBar().setTitle("Detalles de compra");
         txt_id= findViewById(R.id.txt_id);
         txt_monto= findViewById(R.id.txt_monto);
         txt_status= findViewById(R.id.txt_status);
