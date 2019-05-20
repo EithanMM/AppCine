@@ -7,6 +7,7 @@ public class ObjetosxDesplegar {
     private String atributo04;
     private int NumDibujo;
     private String idPelicula;
+
     public ObjetosxDesplegar(String atributo01, String atributo02, String atributo03, String atributo04, int NumDibujo, String idPelicula){
         super();
         this.atributo01 = atributo01;

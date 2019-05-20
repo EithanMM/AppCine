@@ -4,9 +4,12 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
+import com.example.proyectocine.Helpers.ObjetosxDesplegar;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 
 public class VariablesGlobales {
 
@@ -24,6 +27,10 @@ public class VariablesGlobales {
     private int precioTotal;
     private int totalButacas = 10;
     private int butacasSeleccionadas = 0;
+
+    private ArrayList<ObjetosxDesplegar> lista_Objetcos;
+    private ArrayList<ObjetoBitacora> lista_bitacora;
+    private ArrayList<ObjetoFuncion> lista_funcion;
 
     private static VariablesGlobales instance = null;
 
@@ -124,4 +131,29 @@ public class VariablesGlobales {
     public void setButacasSeleccionadas(int butacasSeleccionadas) {
         this.butacasSeleccionadas = butacasSeleccionadas;
     }
+
+    public ArrayList<ObjetosxDesplegar> getLista_Objetcos() {
+        return lista_Objetcos;
+    }
+
+    public void setLista_Objetcos(ArrayList<ObjetosxDesplegar> lista_Objetcos) {
+        this.lista_Objetcos = lista_Objetcos;
+    }
+
+    public ArrayList<ObjetoBitacora> getLista_bitacora() {
+        return lista_bitacora;
+    }
+
+    public void setLista_bitacora(ArrayList<ObjetoBitacora> lista_bitacora) {
+        this.lista_bitacora = lista_bitacora;
+    }
+
+    public ArrayList<ObjetoFuncion> getLista_funcion() {
+        return lista_funcion;
+    }
+
+    public void setLista_funcion(ArrayList<ObjetoFuncion> lista_funcion) {
+        this.lista_funcion = lista_funcion;
+    }
+
 }

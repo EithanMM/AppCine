@@ -2,6 +2,7 @@ package com.example.proyectocine.Controllers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -15,6 +16,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
@@ -23,6 +26,7 @@ import com.example.proyectocine.Data.DBAdapterSQL;
 import com.example.proyectocine.Helpers.GmailHelper;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
+import com.example.proyectocine.Helpers.ObjetosxDesplegar;
 import com.example.proyectocine.R;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +78,9 @@ public class claseBase extends AppCompatActivity {
     private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
     private int total_boletos = 0;
 
+
+    private RequestQueue request;
+    private JsonObjectRequest jsonObjectRequest;
 
     private String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|" +
             "\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\" +
@@ -126,8 +134,8 @@ public class claseBase extends AppCompatActivity {
             MensajeOK(db.DropearYCrearBD());
         }
 
-        public ArrayList<ObjetoFuncion> ObtenerTodasFunciones(){
-            return db.ObtenerTodasFunciones();
+        public void ObtenerTodasFunciones(Context context){
+             db.ObtenerTodasFunciones(context);
         }
 
         public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion(){
@@ -135,7 +143,7 @@ public class claseBase extends AppCompatActivity {
     }
 
         public void InsertarRegistroEnBitacora(Intent intento){
-            ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
+/*            ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
             String msg = "";
             for(ObjetoFuncion of : funciones){
                 if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
@@ -150,7 +158,7 @@ public class claseBase extends AppCompatActivity {
                 EnviarEmail(intento);
             } else {
                 MensajeOK("Ocurrio un error a la hora de registrar compra...");
-            }
+            }*/
         }
 
         public String DesplegarInfoPelicula(String idPelicula) {
@@ -338,6 +346,19 @@ public class claseBase extends AppCompatActivity {
     public void LimpiarListaBitacora() {
         vg.setListaBitacora(null);
     }
+
+    public ArrayList<ObjetosxDesplegar> ObtenerListaObjetosXDesplegar(){
+            return vg.getLista_Objetcos();
+    }
+
+    public ArrayList<ObjetoBitacora> ObtenerListaBitacora(){
+            return vg.getLista_bitacora();
+    }
+
+    public ArrayList<ObjetoFuncion> ObtenerListaFuncion(){
+            return vg.getLista_funcion();
+    }
+
 
         public String FormatoHora(String hora){
         Calendar calendar = GenerarCalendario(hora);

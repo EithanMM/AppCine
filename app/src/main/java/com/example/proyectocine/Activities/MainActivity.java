@@ -42,7 +42,6 @@ public class MainActivity extends claseBase {
             DropearYCrearBD();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
-
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         LlenarListaObjetos();
         LlenarListView();
@@ -124,7 +123,7 @@ public class MainActivity extends claseBase {
 
     private List<ObjetosxDesplegar> misObjetos = new ArrayList<ObjetosxDesplegar>();
     private void LlenarListaObjetos() {
-        ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
+        ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
         for(ObjetoFuncion of : funciones){
             misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+FormatoHora(of.getHoraInicio().toString()), DeterminarImagen(of.getIdPelicula()), of.getIdPelicula()));
         }
@@ -142,7 +141,7 @@ public class MainActivity extends claseBase {
             public void onItemClick(AdapterView<?> parent, View viewClicked,
                                     int position, long id) {
                 ObjetosxDesplegar ObjEscogido = misObjetos.get(position);
-                ArrayList<ObjetoFuncion> funcion = ObtenerTodasFunciones();
+                ArrayList<ObjetoFuncion> funcion = ObtenerListaFuncion();
                 VariablesGlobales vg = VariablesGlobales.getInstance();
 
                 vg.setNombrePelicula(funcion.get(position).getNombrePelicula());

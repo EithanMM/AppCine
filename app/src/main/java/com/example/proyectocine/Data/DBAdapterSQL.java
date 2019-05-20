@@ -6,10 +6,22 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Time;
 import java.text.DateFormat;
@@ -19,7 +31,7 @@ import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
-public class DBAdapterSQL {
+public class DBAdapterSQL implements Response.Listener<JSONArray>, Response.ErrorListener {
 
     static final String PK_PELICULA ="IdPelicula";
     static final String PK_SALA ="IdSala";
@@ -42,17 +54,26 @@ public class DBAdapterSQL {
     final Context context;
     DatabaseHelper DBHelper;
     SQLiteDatabase db;
+    VariablesGlobales vg = VariablesGlobales.getInstance();
     EntidadesBD eDB = new EntidadesBD();
+
+    private RequestQueue requestQueue;
+    private JsonArrayRequest jsonArrayRequest;
+    private String mensajeAccion = "";
+
+    ArrayList<ObjetoFuncion> funciones = new ArrayList<ObjetoFuncion>();
+    ArrayList<ObjetoBitacora> bitacora = new ArrayList<ObjetoBitacora>();
 
     public  String getDatabaseName() {
         return DATABASE_NAME;
     }
 
-
     public DBAdapterSQL(Context ctx) {
         this.context = ctx;
         DBHelper = new DatabaseHelper(context);
     }
+
+
     // creamos subclase DatabaseHelper
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -203,26 +224,13 @@ public class DBAdapterSQL {
         return msg;
     }
 
-    public ArrayList<ObjetoFuncion> ObtenerTodasFunciones(){
-        ArrayList<ObjetoFuncion> resultado =  new ArrayList<>();
-        String query = eDB.ObtenerVistaFuncion();
-        Cursor c = db.rawQuery(query,null);
-        int count = c.getCount();
-        if(c.getCount() != 0){
-            while(c.moveToNext()){
-                String id = c.getString(0);
-                String idPelicula = c.getString(1);
-                String idSala = c.getString(2);
-                String NombrePelicula = c.getString(3);
-                String NombreSala = c.getString(4);
-                String Dia = c.getString(5);
-                String Genero = c.getString(6);
-                Time Hora =  FormatoHora(c.getString(7));
-                ObjetoFuncion objF = new ObjetoFuncion(id, idPelicula, idSala, NombrePelicula, NombreSala, Genero, Dia, Hora);
-                resultado.add(objF);
-            }
-        } else {return null;}
-        return resultado;
+    public void ObtenerTodasFunciones(Context context) {
+        String url = "http://localhost/listaPeliculas.php?accion=ejecutar";
+        mensajeAccion = "ListarFunciones";
+        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+        requestQueue = Volley.newRequestQueue(context);
+
+        requestQueue.add(jsonArrayRequest);
     }
 
     public ArrayList<ObjetoBitacora> ObtenerButacasOcupadas(int id_funcion, String D, Time H){
@@ -269,6 +277,62 @@ public class DBAdapterSQL {
         }
         return msg;
     }
+
+    private void LLenarListaBitacora(ArrayList<ObjetoBitacora> items){
+        vg.setLista_bitacora(items);
+    }
+
+    private void LLenarListaFunciones(ArrayList<ObjetoFuncion> items){
+        vg.setLista_funcion(items);
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResponse(JSONArray response) {
+        try {
+            Time hora;
+            switch(mensajeAccion) {
+
+                case "ListarFunciones":
+                    for(int i = 0; i < response.length(); i++) {
+                        JSONObject jsonObject = response.getJSONObject(i);
+                        ObjetoFuncion obj = new ObjetoFuncion();
+                        obj.setID(jsonObject.getString("Id_Funcion"));
+                        obj.setIdPelicula(jsonObject.getString("Id_Pelicula"));
+                        obj.setIdSala(jsonObject.getString("Id_Sala"));
+                        obj.setNombrePelicula(jsonObject.getString("NombrePelicula"));
+                        obj.setNombreSala(jsonObject.getString("NombreSala"));
+                        obj.setGenero(jsonObject.getString("Tipo"));
+                        obj.setDiaFuncion(jsonObject.getString("DiaFuncion"));
+                        obj.setHoraInicio(hora = FormatoHora(jsonObject.getString("HoraInicio")));
+
+                        funciones.add(obj);
+                    }
+                    LLenarListaFunciones(funciones);
+                    break;
+
+                case "ListarCamposOcupados":
+                    break;
+
+                case "ListarBitacora":
+                    break;
+
+                case "AgregarBitacora":
+                    break;
+
+                default:
+                    break;
+            }
+
+        } catch(JSONException e) {
+
+        }
+    }
+
 
 }
 
