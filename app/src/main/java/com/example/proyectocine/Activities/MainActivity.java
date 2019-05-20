@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -204,6 +205,16 @@ public class MainActivity extends claseBase {
             return itemView;
         }
     }
+    // colocar al abrir la clase de la activity
+    @Override
+    public void onBackPressed() {
+        //Toast.makeText(getApplicationContext(), "Te atrape", Toast.LENGTH_LONG).show();
+        // super.onBackPressed(); habilite esto si desea que se devuelva con el boton back
+        // Button MiBoton = (Button) findViewById(R.id.button2);
+        //MiBoton.performClick();
+       // cerrarApplicacion();
+    }
+
 
 
 }

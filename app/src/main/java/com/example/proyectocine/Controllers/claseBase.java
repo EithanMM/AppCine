@@ -143,7 +143,7 @@ public class claseBase extends AppCompatActivity {
     }
 
         public void InsertarRegistroEnBitacora(Intent intento){
-/*            ArrayList<ObjetoFuncion> funciones = ObtenerTodasFunciones();
+            ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
             String msg = "";
             for(ObjetoFuncion of : funciones){
                 if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
@@ -158,7 +158,7 @@ public class claseBase extends AppCompatActivity {
                 EnviarEmail(intento);
             } else {
                 MensajeOK("Ocurrio un error a la hora de registrar compra...");
-            }*/
+            }
         }
 
         public String DesplegarInfoPelicula(String idPelicula) {
@@ -311,35 +311,35 @@ public class claseBase extends AppCompatActivity {
             Matcher matcher3 = email_pattern.matcher(correo.getText().toString());
 
 
-            if(cedula.getText().toString().equals("")){
-                MensajeOK("Debe digitar una cédula por favor.");
-                return respuesta;
-
-            } else if(nombre.getText().toString().equals("")){
-                MensajeOK("Debe digitar un nombre por favor.");
-                return respuesta;
-            } else if(!matcher1.find()){
-                MensajeOK("El nombre ingresado posee caracteres no validos.");
-                return respuesta;
-            } else if(apellido.getText().toString().equals("")){
-                MensajeOK("Debe ingresar un apellido por favor.");
-                return respuesta;
-            } else if(!matcher2.find()){
-                MensajeOK("El o los apellidos ingresados poseen caracteres no validos.");
-                return respuesta;
-            } else if(correo.getText().toString().equals("")){
-                MensajeOK("Debe digitar un correo electrónico por favor.");
-                return respuesta;
-            } else if(!matcher3.find()){
-                MensajeOK("El correo ingresado no es válido, favor ingresar un correo válido.");
-                return respuesta;
-            } else {
-                respuesta = true;
-            }
+        if (cedula.getText().toString().equals("")) {
+            MensajeOK("Debe digitar una cédula por favor.");
             return respuesta;
+
+        } else if (nombre.getText().toString().equals("")) {
+            MensajeOK("Debe digitar un nombre por favor.");
+            return respuesta;
+        } else if (!matcher1.find()) {
+            MensajeOK("El nombre ingresado posee caracteres no validos.");
+            return respuesta;
+        } else if (apellido.getText().toString().equals("")) {
+            MensajeOK("Debe ingresar un apellido por favor.");
+            return respuesta;
+        } else if (!matcher2.find()) {
+            MensajeOK("El o los apellidos ingresados poseen caracteres no validos.");
+            return respuesta;
+        } else if (correo.getText().toString().equals("")) {
+            MensajeOK("Debe digitar un correo electrónico por favor.");
+            return respuesta;
+        } else if (!matcher3.find()) {
+            MensajeOK("El correo ingresado no es válido, favor ingresar un correo válido.");
+            return respuesta;
+        } else {
+            respuesta = true;
+        }
+        return respuesta;
     }
 
-        public void LimpiarListaAsientos(){
+    public void LimpiarListaAsientos() {
         vg.getListaAsientos().clear();
     }
 
