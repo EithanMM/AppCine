@@ -64,7 +64,7 @@ public class Fragment_butacas extends Fragment {
         TableLayout Mi_tablelayout = (TableLayout) view.findViewById(R.id.tabla_butacas);
         vg.setTablaButacas(Mi_tablelayout);
 
-        ObtenerButacasOcupadasPorFuncion(vg);
+        //ObtenerButacasOcupadasPorFuncion(vg);
         return view;
 
     }
@@ -776,7 +776,7 @@ public class Fragment_butacas extends Fragment {
 
     private boolean PermitirIncremento(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        if(contador < vg.getButacasSeleccionadas()){
+        if(contador <= vg.getButacasSeleccionadas()){
             contador++;
             return true;
         } else {return false;}
