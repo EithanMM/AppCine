@@ -54,15 +54,13 @@ public class DBAdapterSQL implements Response.Listener<JSONArray>, Response.Erro
     final Context context;
     DatabaseHelper DBHelper;
     SQLiteDatabase db;
-    VariablesGlobales vg = VariablesGlobales.getInstance();
     EntidadesBD eDB = new EntidadesBD();
 
-    private RequestQueue requestQueue;
-    private JsonArrayRequest jsonArrayRequest;
-    private String mensajeAccion = "";
+
 
     ArrayList<ObjetoFuncion> funciones = new ArrayList<ObjetoFuncion>();
     ArrayList<ObjetoBitacora> bitacora = new ArrayList<ObjetoBitacora>();
+    public VariablesGlobales VgBase;
 
     public  String getDatabaseName() {
         return DATABASE_NAME;
@@ -224,14 +222,15 @@ public class DBAdapterSQL implements Response.Listener<JSONArray>, Response.Erro
         return msg;
     }
 
-    public void ObtenerTodasFunciones(Context context) {
-        String url = "http://localhost/listaPeliculas.php?accion=ejecutar";
-        mensajeAccion = "ListarFunciones";
-        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
-        requestQueue = Volley.newRequestQueue(context);
-
-        requestQueue.add(jsonArrayRequest);
-    }
+//    public void ObtenerTodasFunciones(Context context, VariablesGlobales variable) {
+//        String url = "http://192.168.119.1/Android/v1/mostrarFunciones.php";
+//        mensajeAccion = "ListarFunciones";
+//        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+//        this.VgBase = variable;
+//        requestQueue = Volley.newRequestQueue(context);
+//
+//        requestQueue.add(jsonArrayRequest);
+//    }
 
     public ArrayList<ObjetoBitacora> ObtenerButacasOcupadas(int id_funcion, String D, Time H){
         ArrayList<ObjetoBitacora> resultado =  new ArrayList<>();
@@ -278,13 +277,7 @@ public class DBAdapterSQL implements Response.Listener<JSONArray>, Response.Erro
         return msg;
     }
 
-    private void LLenarListaBitacora(ArrayList<ObjetoBitacora> items){
-        vg.setLista_bitacora(items);
-    }
 
-    private void LLenarListaFunciones(ArrayList<ObjetoFuncion> items){
-        vg.setLista_funcion(items);
-    }
 
     @Override
     public void onErrorResponse(VolleyError error) {
@@ -293,44 +286,6 @@ public class DBAdapterSQL implements Response.Listener<JSONArray>, Response.Erro
 
     @Override
     public void onResponse(JSONArray response) {
-        try {
-            Time hora;
-            switch(mensajeAccion) {
-
-                case "ListarFunciones":
-                    for(int i = 0; i < response.length(); i++) {
-                        JSONObject jsonObject = response.getJSONObject(i);
-                        ObjetoFuncion obj = new ObjetoFuncion();
-                        obj.setID(jsonObject.getString("Id_Funcion"));
-                        obj.setIdPelicula(jsonObject.getString("Id_Pelicula"));
-                        obj.setIdSala(jsonObject.getString("Id_Sala"));
-                        obj.setNombrePelicula(jsonObject.getString("NombrePelicula"));
-                        obj.setNombreSala(jsonObject.getString("NombreSala"));
-                        obj.setGenero(jsonObject.getString("Tipo"));
-                        obj.setDiaFuncion(jsonObject.getString("DiaFuncion"));
-                        obj.setHoraInicio(hora = FormatoHora(jsonObject.getString("HoraInicio")));
-
-                        funciones.add(obj);
-                    }
-                    LLenarListaFunciones(funciones);
-                    break;
-
-                case "ListarCamposOcupados":
-                    break;
-
-                case "ListarBitacora":
-                    break;
-
-                case "AgregarBitacora":
-                    break;
-
-                default:
-                    break;
-            }
-
-        } catch(JSONException e) {
-
-        }
     }
 
 

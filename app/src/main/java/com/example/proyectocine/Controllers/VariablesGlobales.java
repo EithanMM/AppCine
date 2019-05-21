@@ -13,8 +13,18 @@ import java.util.List;
 
 public class VariablesGlobales {
 
-    private ArrayList<String> ListaAsientos = new ArrayList<>();
-    private ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
+    public ArrayList<String> ListaAsientos = new ArrayList<>();
+    public ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
+
+    public ArrayList<ObjetoFuncion> getListaFuncion() {
+        return ListaFuncion;
+    }
+
+    public void setListaFuncion(ArrayList<ObjetoFuncion> listaFuncion) {
+        ListaFuncion = listaFuncion;
+    }
+
+    private ArrayList<ObjetoFuncion> ListaFuncion = new ArrayList<>();
 
     private TextView TextHelper;
     private TableLayout TablaButacas;
@@ -28,9 +38,6 @@ public class VariablesGlobales {
     private int totalButacas = 10;
     private int butacasSeleccionadas = 0;
 
-    private ArrayList<ObjetosxDesplegar> lista_Objetcos;
-    private ArrayList<ObjetoBitacora> lista_bitacora;
-    private ArrayList<ObjetoFuncion> lista_funcion;
 
     private static VariablesGlobales instance = null;
 
@@ -132,28 +139,6 @@ public class VariablesGlobales {
         this.butacasSeleccionadas = butacasSeleccionadas;
     }
 
-    public ArrayList<ObjetosxDesplegar> getLista_Objetcos() {
-        return lista_Objetcos;
-    }
 
-    public void setLista_Objetcos(ArrayList<ObjetosxDesplegar> lista_Objetcos) {
-        this.lista_Objetcos = lista_Objetcos;
-    }
-
-    public ArrayList<ObjetoBitacora> getLista_bitacora() {
-        return lista_bitacora;
-    }
-
-    public void setLista_bitacora(ArrayList<ObjetoBitacora> lista_bitacora) {
-        this.lista_bitacora = lista_bitacora;
-    }
-
-    public ArrayList<ObjetoFuncion> getLista_funcion() {
-        return lista_funcion;
-    }
-
-    public void setLista_funcion(ArrayList<ObjetoFuncion> lista_funcion) {
-        this.lista_funcion = lista_funcion;
-    }
 
 }

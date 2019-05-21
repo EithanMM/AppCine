@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +17,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
@@ -34,7 +40,14 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +57,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class claseBase extends AppCompatActivity {
+import static android.content.ContentValues.TAG;
+
+public class claseBase extends AppCompatActivity  {
 
      private DBAdapterSQL db;
      private GmailHelper gh = new GmailHelper();
@@ -56,6 +71,8 @@ public class claseBase extends AppCompatActivity {
      private TextView apellido;
      private TextView correo;
 
+    public ArrayList<ObjetoFuncion> funciones = new ArrayList<ObjetoFuncion>();
+    public ArrayList<ObjetoBitacora> bitacora = new ArrayList<ObjetoBitacora>();
 
     private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
             cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
@@ -78,6 +95,9 @@ public class claseBase extends AppCompatActivity {
     private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
     private int total_boletos = 0;
 
+    public RequestQueue requestQueue;
+    public JsonArrayRequest jsonArrayRequest;
+    public String mensajeAccion = "";
 
     private RequestQueue request;
     private JsonObjectRequest jsonObjectRequest;
@@ -134,31 +154,28 @@ public class claseBase extends AppCompatActivity {
             MensajeOK(db.DropearYCrearBD());
         }
 
-        public void ObtenerTodasFunciones(Context context){
-             db.ObtenerTodasFunciones(context);
-        }
 
         public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion(){
             return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(),vg.getHoraFuncion());
     }
 
         public void InsertarRegistroEnBitacora(Intent intento){
-            ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
-            String msg = "";
-            for(ObjetoFuncion of : funciones){
-                if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
-                   of.getNombreSala().equals(vg.getNombreSala())&&
-                   of.getDiaFuncion().equals(vg.getDiaFuncion())&&
-                   of.getHoraInicio().equals(vg.getHoraFuncion())){
-
-                    msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
-                }
-            }
-            if(msg.equals("good")){
-                EnviarEmail(intento);
-            } else {
-                MensajeOK("Ocurrio un error a la hora de registrar compra...");
-            }
+//            ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
+//            String msg = "";
+//            for(ObjetoFuncion of : funciones){
+//                if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
+//                   of.getNombreSala().equals(vg.getNombreSala())&&
+//                   of.getDiaFuncion().equals(vg.getDiaFuncion())&&
+//                   of.getHoraInicio().equals(vg.getHoraFuncion())){
+//
+//                    msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
+//                }
+//            }
+//            if(msg.equals("good")){
+//                EnviarEmail(intento);
+//            } else {
+//                MensajeOK("Ocurrio un error a la hora de registrar compra...");
+//            }
         }
 
         public String DesplegarInfoPelicula(String idPelicula) {
@@ -347,17 +364,6 @@ public class claseBase extends AppCompatActivity {
         vg.setListaBitacora(null);
     }
 
-    public ArrayList<ObjetosxDesplegar> ObtenerListaObjetosXDesplegar(){
-            return vg.getLista_Objetcos();
-    }
-
-    public ArrayList<ObjetoBitacora> ObtenerListaBitacora(){
-            return vg.getLista_bitacora();
-    }
-
-    public ArrayList<ObjetoFuncion> ObtenerListaFuncion(){
-            return vg.getLista_funcion();
-    }
 
 
         public String FormatoHora(String hora){
@@ -502,6 +508,7 @@ public class claseBase extends AppCompatActivity {
 
     }
 
+
     /*--------------------------------------------------------------------------------------------*/
 
 //metodos para pago con paypal
@@ -519,4 +526,5 @@ public void pagar(){
     startActivityForResult(intent,PAYPAL_REQUEST_CODE);
 
 }
+
 }

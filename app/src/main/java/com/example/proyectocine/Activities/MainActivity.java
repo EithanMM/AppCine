@@ -1,10 +1,12 @@
 package com.example.proyectocine.Activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -15,6 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.Helpers.ObjetosxDesplegar;
@@ -26,13 +33,27 @@ import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderLayout;
 import com.smarteist.autoimageslider.SliderView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends claseBase {
+import static android.content.ContentValues.TAG;
+
+public class MainActivity extends claseBase implements Response.Listener<JSONArray>, Response.ErrorListener {
     //Esto es una prueba desde el proyecto.
     SharedPreferences prefs = null;
     SliderLayout sliderLayout;
+
+    VariablesGlobales vg = VariablesGlobales.getInstance();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +65,10 @@ public class MainActivity extends claseBase {
             prefs.edit().putBoolean("firstrun", false).commit();
         }
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
-        LlenarListaObjetos();
+        ObtenerTodasFunciones(this, vg);
+        //LlenarListaObjetos();
         LlenarListView();
-        RegistrarClicks();
+       // RegistrarClicks();
 
 
 
@@ -58,6 +80,19 @@ public class MainActivity extends claseBase {
 
        // caca();
     }
+
+
+    public void ObtenerTodasFunciones(Context context, VariablesGlobales variable){
+        String url = "http://192.168.119.1/Android/v1/mostrarFunciones.php";
+        mensajeAccion = "ListarFunciones";
+        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+        requestQueue = Volley.newRequestQueue(context);
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
+
+
     private void peliculasEnSlider() {
 
         for (int i = 0; i <= 7; i++) {
@@ -123,16 +158,21 @@ public class MainActivity extends claseBase {
     }
 
     private List<ObjetosxDesplegar> misObjetos = new ArrayList<ObjetosxDesplegar>();
+
     private void LlenarListaObjetos() {
-        ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
+        ArrayList<ObjetoFuncion> funciones = vg.getListaFuncion();
         for(ObjetoFuncion of : funciones){
             misObjetos.add(new ObjetosxDesplegar(of.getNombrePelicula(), of.getGenero(),of.getNombreSala(),of.getDiaFuncion()+"-"+FormatoHora(of.getHoraInicio().toString()), DeterminarImagen(of.getIdPelicula()), of.getIdPelicula()));
         }
+        LlenarListView();
     }
+
     private void LlenarListView() {
         ArrayAdapter<ObjetosxDesplegar> adapter = new MyListAdapter();
         ListView list = (ListView) findViewById(R.id.list_view_peliculas);
         list.setAdapter(adapter);
+
+        RegistrarClicks();
     }
 
     private void RegistrarClicks() {
@@ -142,7 +182,7 @@ public class MainActivity extends claseBase {
             public void onItemClick(AdapterView<?> parent, View viewClicked,
                                     int position, long id) {
                 ObjetosxDesplegar ObjEscogido = misObjetos.get(position);
-                ArrayList<ObjetoFuncion> funcion = ObtenerListaFuncion();
+                ArrayList<ObjetoFuncion> funcion = vg.getListaFuncion();
                 VariablesGlobales vg = VariablesGlobales.getInstance();
 
                 vg.setNombrePelicula(funcion.get(position).getNombrePelicula());
@@ -213,6 +253,72 @@ public class MainActivity extends claseBase {
         // Button MiBoton = (Button) findViewById(R.id.button2);
         //MiBoton.performClick();
        // cerrarApplicacion();
+    }
+
+    private Time FormatoHoraBD(String hora){
+        DateFormat formatter = new SimpleDateFormat("K:mm");
+        Time time = null;
+        try{
+            time = new Time(formatter.parse(hora).getTime());
+        }catch(ParseException ex){
+            Log.d(TAG, "Error:"+ex.getMessage());
+        }
+        return time;
+    }
+
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResponse(JSONArray response) {
+
+        try {
+
+            Time hora;
+            switch(mensajeAccion) {
+
+                case "ListarFunciones":
+
+                    for(int i = 0; i < response.length(); i++) {
+
+                        String temp = response.get(i).toString();
+                        JSONObject jsonObject = new JSONObject(temp);
+
+                        ObjetoFuncion obj = new ObjetoFuncion();
+                        obj.setID(jsonObject.getString("Id_Funcion"));
+                        obj.setIdPelicula(jsonObject.getString("Id_Pelicula"));
+                        obj.setIdSala(jsonObject.getString("Id_Sala"));
+                        obj.setNombrePelicula(jsonObject.getString("NombrePelicula"));
+                        obj.setNombreSala(jsonObject.getString("NombreSala"));
+                        obj.setGenero(jsonObject.getString("Tipo"));
+                        obj.setDiaFuncion(jsonObject.getString("DiaFuncion"));
+                        obj.setHoraInicio(hora = FormatoHoraBD(jsonObject.getString("HoraInicio")));
+
+                        funciones.add(obj);
+                    }
+                    vg.setListaFuncion(funciones);
+                    break;
+
+                case "ListarCamposOcupados":
+                    break;
+
+                case "ListarBitacora":
+                    break;
+
+                case "AgregarBitacora":
+                    break;
+
+                default:
+                    break;
+            }
+
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+        LlenarListaObjetos();
     }
 
 
