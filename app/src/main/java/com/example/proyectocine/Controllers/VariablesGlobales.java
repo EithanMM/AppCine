@@ -16,13 +16,6 @@ public class VariablesGlobales {
     public ArrayList<String> ListaAsientos = new ArrayList<>();
     public ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
 
-    public ArrayList<ObjetoFuncion> getListaFuncion() {
-        return ListaFuncion;
-    }
-
-    public void setListaFuncion(ArrayList<ObjetoFuncion> listaFuncion) {
-        ListaFuncion = listaFuncion;
-    }
 
     private ArrayList<ObjetoFuncion> ListaFuncion = new ArrayList<>();
 
@@ -139,6 +132,12 @@ public class VariablesGlobales {
         this.butacasSeleccionadas = butacasSeleccionadas;
     }
 
+    public ArrayList<ObjetoFuncion> getListaFuncion() {
+        return ListaFuncion;
+    }
 
+    public void setListaFuncion(ArrayList<ObjetoFuncion> listaFuncion) {
+        ListaFuncion = listaFuncion;
+    }
 
 }

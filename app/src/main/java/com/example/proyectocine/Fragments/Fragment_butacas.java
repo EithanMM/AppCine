@@ -1,6 +1,7 @@
 package com.example.proyectocine.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,16 +14,35 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class Fragment_butacas extends Fragment {
+public class Fragment_butacas extends Fragment implements Response.Listener<JSONArray>, Response.ErrorListener {
+
     private int contador = 0;
+    public RequestQueue requestQueue;
+    public JsonArrayRequest jsonArrayRequest;
+    public String mensajeAccion = "";
     public Fragment_butacas() { }
 
     @Override
@@ -64,6 +84,7 @@ public class Fragment_butacas extends Fragment {
         TableLayout Mi_tablelayout = (TableLayout) view.findViewById(R.id.tabla_butacas);
         vg.setTablaButacas(Mi_tablelayout);
 
+        ConsultarButacas();
         //ObtenerButacasOcupadasPorFuncion(vg);
         return view;
 
@@ -754,6 +775,18 @@ public class Fragment_butacas extends Fragment {
         input.setText("");
     }
 
+
+    private void ConsultarButacas(){
+        VariablesGlobales vg = VariablesGlobales.getInstance();
+        String url = "http://192.168.119.1/Android/v1/consultarButacas.php?id_pelicula="+vg.getIdPelicula()+
+                "&dia="+vg.getDiaFuncion()+"&hora="+vg.getHoraFuncion();
+        mensajeAccion = "ListarFunciones";
+        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+        requestQueue = (RequestQueue) Volley.newRequestQueue(getActivity());
+
+        requestQueue.add(jsonArrayRequest);
+    }
+
     private void ObtenerButacasOcupadasPorFuncion(VariablesGlobales vg){
         if(vg.getListaBitacora() != null) {
             TableLayout tabla = vg.getTablaButacas();
@@ -791,4 +824,37 @@ public class Fragment_butacas extends Fragment {
         }
     }
 
+
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+
+    }
+
+    @Override
+    public void onResponse(JSONArray response) {
+
+        try {
+            Time hora;
+            ArrayList<ObjetoBitacora> asientos = new ArrayList<ObjetoBitacora>();
+
+            for(int i = 0; i < response.length(); i++) {
+
+                        String temp = response.get(i).toString();
+                        JSONObject jsonObject = new JSONObject(temp);
+
+                        ObjetoBitacora obj = new ObjetoBitacora();
+                        obj.setAsientoEnUso(jsonObject.getString("Asiento"));
+
+                        asientos.add(obj);
+                    }
+                    VariablesGlobales vg = VariablesGlobales.getInstance();
+                    vg.setListaBitacora(asientos);
+
+            ObtenerButacasOcupadasPorFuncion(vg);
+
+        } catch(JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -21,6 +21,10 @@ public class ObjetoBitacora {
         AsientoEnUso = asientoEnUso;
     }
 
+    public ObjetoBitacora(){
+
+    }
+
     public String getIdFuncion() {
         return IdFuncion;
     }
