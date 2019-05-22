@@ -15,8 +15,6 @@ public class VariablesGlobales {
 
     public ArrayList<String> ListaAsientos = new ArrayList<>();
     public ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
-
-
     private ArrayList<ObjetoFuncion> ListaFuncion = new ArrayList<>();
 
     private TextView TextHelper;
@@ -30,6 +28,11 @@ public class VariablesGlobales {
     private int precioTotal;
     private int totalButacas = 10;
     private int butacasSeleccionadas = 0;
+
+
+    private String nombreUsuario;
+    private String apellidosUsuario;
+    private String cedulaUsuario;
 
 
     private static VariablesGlobales instance = null;
@@ -138,6 +141,30 @@ public class VariablesGlobales {
 
     public void setListaFuncion(ArrayList<ObjetoFuncion> listaFuncion) {
         ListaFuncion = listaFuncion;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getApellidosUsuario() {
+        return apellidosUsuario;
+    }
+
+    public void setApellidosUsuario(String apellidosUsuario) {
+        this.apellidosUsuario = apellidosUsuario;
+    }
+
+    public String getCedulaUsuario() {
+        return cedulaUsuario;
+    }
+
+    public void setCedulaUsuario(String cedulaUsuario) {
+        this.cedulaUsuario = cedulaUsuario;
     }
 
 }

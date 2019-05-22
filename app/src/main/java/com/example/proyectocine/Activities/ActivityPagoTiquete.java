@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.R;
 import com.example.proyectocine.Controllers.claseBase;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -20,6 +21,11 @@ import java.math.BigDecimal;
 
 public class ActivityPagoTiquete extends claseBase {
 
+    TextView cedula;
+    TextView nombre;
+    TextView apellido;
+    TextView correo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,15 +35,15 @@ public class ActivityPagoTiquete extends claseBase {
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,configuration);
         startService(intent);
 
-        CrearYAbrirBaseDeDatos();
 
         OnclickDelButton(R.id.btn_realiar_pago);
         OnclickDelButton(R.id.btn_vovler_seleccion_butacas);
 
-        TextView cedula = (TextView) findViewById(R.id.cedula_input);
-        TextView nombre = (TextView) findViewById(R.id.nombre_input);
-        TextView apellido = (TextView) findViewById(R.id.apellido_input);
-        TextView correo = (TextView) findViewById(R.id.correo_input);
+        cedula = (TextView) findViewById(R.id.cedula_input);
+        nombre = (TextView) findViewById(R.id.nombre_input);
+        apellido = (TextView) findViewById(R.id.apellido_input);
+        correo = (TextView) findViewById(R.id.correo_input);
+
 
         InicializamosTextViewsParaCorreo(cedula,nombre,apellido,correo);
     }
@@ -57,6 +63,12 @@ public class ActivityPagoTiquete extends claseBase {
                 PaymentConfirmation paymentConfirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (paymentConfirmation != null) {
                     try {
+                        VariablesGlobales vg = VariablesGlobales.getInstance();
+
+                        vg.setCedulaUsuario(cedula.getText().toString());
+                        vg.setNombreUsuario(nombre.getText().toString());
+                        vg.setApellidosUsuario(apellido.getText().toString());
+
                         String payment_details = paymentConfirmation.toJSONObject().toString(4);
                         startActivity(new Intent(this, PaymentDetailsActivity.class)
                                 .putExtra("details", payment_details)

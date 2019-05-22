@@ -66,9 +66,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
         }
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         ObtenerTodasFunciones(this, vg);
-        //LlenarListaObjetos();
-        LlenarListView();
-       // RegistrarClicks();
+
 
 
 

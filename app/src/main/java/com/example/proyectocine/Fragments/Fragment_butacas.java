@@ -97,6 +97,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
             @Override
             public void onClick(View v) {
 
+
                 switch (v.getId()) {
 
                     case R.id.A1:
@@ -258,6 +259,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
         VariablesGlobales vg = VariablesGlobales.getInstance();
         ImageView midib = (ImageView)view.findViewById(ident);
         String tag = String.valueOf(midib.getTag());
+
         switch(tag){
 
             case "DA1":
@@ -809,7 +811,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
     private boolean PermitirIncremento(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        if(contador <= vg.getButacasSeleccionadas()){
+        if(contador < vg.getButacasSeleccionadas()){
             contador++;
             return true;
         } else {return false;}
