@@ -1,7 +1,9 @@
 package com.example.proyectocine.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.proyectocine.Activities.ActividadBoletos;
+import com.example.proyectocine.Activities.ActivityInfoPelicula;
 import com.example.proyectocine.Controllers.VariablesGlobales;
+import com.example.proyectocine.Controllers.claseBase;
+import com.example.proyectocine.Helpers.Horario;
+import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.R;
 
@@ -26,7 +33,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import static android.content.ContentValues.TAG;
 
 
 public class Fragment_horario extends Fragment implements Response.Listener<JSONArray>, Response.ErrorListener {
@@ -34,10 +46,10 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
     //private String idPelicula="";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String nombrePelicula;
     private String mParam2;
     ListView listView;
-    ArrayList<String> elementos = new ArrayList<>();
+    ArrayList<Horario> elementos = new ArrayList<>();
 
     String mensajeAccion = "";
     public RequestQueue requestQueue;
@@ -66,26 +78,6 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
         return inflater.inflate(R.layout.fragment_fragment_horario, container, false);
     }
 
-    private void LlenarListView() {
-        String[] presidentes = {
-                "Dwight D. Eisenhower",
-                "John F. Kennedy",
-                "Lyndon B. Johnson",
-                "Richard Nixon",
-                "Gerald Ford",
-                "Jimmy Carter",
-                "Ronald Reagan",
-                "George H. W. Bush",
-                "Bill Clinton",
-                "George W. Bush",
-                "Barack Obama"
-        };
-
-        ArrayAdapter<String> adaptador = new ArrayAdapter(getActivity().getApplicationContext(),
-                android.R.layout.simple_list_item_1, presidentes);
-        ListView milistview = (ListView) getView().findViewById(R.id.listView1);
-        milistview.setAdapter(adaptador);
-    }
 
     @Override
     public void onActivityCreated(Bundle state) {
@@ -140,19 +132,35 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
                         JSONObject jsonObject = new JSONObject(temp);
 
                         //ObjetoFuncion obj = new ObjetoFuncion();
-                        String funcion = "Sala: " + jsonObject.getInt("IdSala") + ", " + jsonObject.getString("DiaFuncion") + " a las " + jsonObject.getString("HoraInicio");
+                        Horario funcion = new Horario(jsonObject.getInt("IdFuncion") + "", jsonObject.getString("IdPelicula"), jsonObject.getString("IdSala"),
+                                jsonObject.getString("DiaFuncion"), jsonObject.getString("HoraInicio"));
 
 
                         elementos.add(funcion);
                     }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_expandable_list_item_1, elementos);
+                    ArrayAdapter<Horario> adapter = new ArrayAdapter<Horario>(getActivity().getApplicationContext(), android.R.layout.simple_expandable_list_item_1, elementos);
                     listView.setAdapter(adapter);
 
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(getActivity().getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(getActivity().getApplicationContext(), elementos.get(position).toString()+ elementos.get(position).getIdFuncion(), Toast.LENGTH_SHORT).show();
+
+                            VariablesGlobales vg = VariablesGlobales.getInstance();
+                            //vg.setNombrePelicula(funcion.get(position).getNombrePelicula());
+                            vg.setDiaFuncion(elementos.get(position).getDiaFuncion());
+                            vg.setHoraFuncion(FormatoHoraBD(elementos.get(position).getHoraInicio()));
+                            vg.setNombreSala(elementos.get(position).getIdSala());
+                            vg.setIdPelicula(elementos.get(position).getIdFuncion());
+
+                            //ArrayList<ObjetoBitacora> registros = ActivityInfoPelicula.ObtenerRegistrosDeBitacoraPorFuncion();
+                            //vg.setListaBitacora(registros);
+
+                            //Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
+                            Intent intento = new Intent(getContext(), ActividadBoletos.class); /* <- Modulo de Eithan*/
+                            startActivity(intento);
 
                         }
                     });
@@ -169,5 +177,16 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
             e.printStackTrace();
         }
         //LlenarListaObjetos();
+    }
+
+    private Time FormatoHoraBD(String hora){
+        DateFormat formatter = new SimpleDateFormat("K:mm");
+        Time time = null;
+        try{
+            time = new Time(formatter.parse(hora).getTime());
+        }catch(ParseException ex){
+            Log.d(TAG, "Error:"+ex.getMessage());
+        }
+        return time;
     }
 }
