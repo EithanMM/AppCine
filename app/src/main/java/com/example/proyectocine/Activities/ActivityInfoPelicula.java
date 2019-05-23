@@ -11,7 +11,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.proyectocine.Fragments.Fragment_horario;
 import com.example.proyectocine.R;
@@ -55,7 +61,10 @@ public class ActivityInfoPelicula extends claseBase {
         ImageView midib = (ImageView)findViewById(R.id.imageViewPelicula);
         midib.setImageResource(DeterminarImagen(vg.getIdPelicula()));
 
+
     }
+
+
 
 
     @Override
@@ -100,7 +109,7 @@ public class ActivityInfoPelicula extends claseBase {
             switch (position){
                 case 0:
                     Fragment_horario tab1 = new Fragment_horario();
-                    tab1.setIdPelicula(vg.getIdPelicula());
+                    //tab1.setIdPelicula(vg.getIdPelicula());
 
                     return tab1;
                 case 1:
