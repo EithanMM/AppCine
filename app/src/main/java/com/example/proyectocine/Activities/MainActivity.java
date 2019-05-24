@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -50,6 +51,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
     //Esto es una prueba desde el proyecto.
     SharedPreferences prefs = null;
     SliderLayout sliderLayout;
+    public static int MY_DEFAULT_TIMEOUT = 5000;
 
     VariablesGlobales vg = VariablesGlobales.getInstance();
 
@@ -76,14 +78,19 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
         peliculasEnSlider();
 
-       // caca();
+        // caca();
     }
 
 
     public void ObtenerTodasFunciones(Context context, VariablesGlobales variable){
-        String url = "http://192.168.0.7/Android/v1/mostrarFunciones.php";
+        String url = "http://192.168.0.107/Android/v1/mostrarFunciones.php";
         mensajeAccion = "ListarFunciones";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_DEFAULT_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue = Volley.newRequestQueue(context);
 
         requestQueue.add(jsonArrayRequest);
@@ -250,7 +257,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
         // super.onBackPressed(); habilite esto si desea que se devuelva con el boton back
         // Button MiBoton = (Button) findViewById(R.id.button2);
         //MiBoton.performClick();
-       // cerrarApplicacion();
+        // cerrarApplicacion();
     }
 
     private Time FormatoHoraBD(String hora){

@@ -13,8 +13,11 @@ import java.util.List;
 
 public class VariablesGlobales {
 
-    public ArrayList<String> ListaAsientos = new ArrayList<>();
-    public ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
+    private ArrayList<String> ListaAsientos = new ArrayList<>();
+    private String AsientosSeleccionados;
+
+
+    private ArrayList<ObjetoBitacora> ListaBitacora = new ArrayList<>();
     private ArrayList<ObjetoFuncion> ListaFuncion = new ArrayList<>();
 
     private TextView TextHelper;
@@ -33,6 +36,7 @@ public class VariablesGlobales {
     private String nombreUsuario;
     private String apellidosUsuario;
     private String cedulaUsuario;
+    private String correo;
 
 
     private static VariablesGlobales instance = null;
@@ -49,6 +53,14 @@ public class VariablesGlobales {
 
     public void setListaAsientos(ArrayList<String> listaAsientos) {
         ListaAsientos = listaAsientos;
+    }
+
+    public String getAsientosSeleccionados() {
+        return AsientosSeleccionados;
+    }
+
+    public void setAsientosSeleccionados(String asientosSeleccionados) {
+        AsientosSeleccionados = asientosSeleccionados;
     }
 
     public TextView getTextHelper() {
@@ -165,6 +177,14 @@ public class VariablesGlobales {
 
     public void setCedulaUsuario(String cedulaUsuario) {
         this.cedulaUsuario = cedulaUsuario;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
 }

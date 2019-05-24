@@ -68,11 +68,14 @@ public class ActivityPagoTiquete extends claseBase {
                         vg.setCedulaUsuario(cedula.getText().toString());
                         vg.setNombreUsuario(nombre.getText().toString());
                         vg.setApellidosUsuario(apellido.getText().toString());
+                        vg.setCorreo(correo.getText().toString());
 
                         String payment_details = paymentConfirmation.toJSONObject().toString(4);
-                        startActivity(new Intent(this, PaymentDetailsActivity.class)
-                                .putExtra("details", payment_details)
-                                .putExtra("monto", dinero));
+                        if(Validaciones()){
+                            startActivity(new Intent(this, PaymentDetailsActivity.class)
+                                    .putExtra("details", payment_details)
+                                    .putExtra("monto", dinero));
+                        }
                     } catch (Exception e) {
 
                     }

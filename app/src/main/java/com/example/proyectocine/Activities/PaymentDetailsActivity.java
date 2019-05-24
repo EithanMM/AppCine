@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.Controllers.claseBase;
@@ -22,11 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
-public class PaymentDetailsActivity extends claseBase implements Response.Listener<JSONArray>, Response.ErrorListener {
+public class PaymentDetailsActivity extends claseBase implements Response.Listener<JSONObject>, Response.ErrorListener {
 
     TextView txt_id,txt_monto,txt_status;
+    private JsonObjectRequest jsonObjectRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +67,29 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
     private void InsertarEnBitacora(){
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.7/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
+        String url = "http://192.168.0.107/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
 
-        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+        jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_DEFAULT_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-        requestQueue.add(jsonArrayRequest);
+
+        requestQueue.add(jsonObjectRequest);
     }
 
     private String ConstruirUrl(VariablesGlobales vg){
         String res = "id_funcion="+vg.getIdPelicula()+
-                     "&EstadoFuncion=A"+
-                     Asientos(vg)+
-                     "&Cedula="+vg.getCedulaUsuario()+
-                     "&Nombre="+vg.getNombreUsuario()+
-                     "&Apellido="+vg.getApellidosUsuario().replace(" ","%20")+
-                     "&NumeroConsec="+GenerarNumeroConsecutivo();
+                "&EstadoFuncion=A"+
+                Asientos(vg)+
+                "&Cedula="+vg.getCedulaUsuario()+
+                "&Nombre="+vg.getNombreUsuario().replace(" ","%20")+
+                "&Apellido="+vg.getApellidosUsuario().replace(" ","%20")+
+                "&NumeroConsec="+GenerarNumeroConsecutivo();
 
         return res;
     }
@@ -86,8 +97,19 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
 
     private String Asientos(VariablesGlobales vg){
         String res = "";
-        for(int i = 0; i < vg.getListaAsientos().size(); i++){
-            res += "&Asiento[]="+vg.getListaAsientos().get(i).toString();
+        String[]array;
+        String reciever = vg.getAsientosSeleccionados();
+
+        if(reciever.length() == 2){ //D5
+            array = new String[1];
+            array[0] = reciever;
+        } else {
+            array = reciever.split(",");
+        }
+
+
+        for(int i = 0; i < array.length; i++){
+            res += "&Asiento[]="+array[i].toString();
         }
         return res;
     }
@@ -108,16 +130,18 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
             }
 
         }while(!salida);
-            return String.valueOf(randomVal);
+        return String.valueOf(randomVal);
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
+        String res = String.valueOf(error.networkResponse.data);
         MensajeOK("No inserta en bitacora: "+error.toString());
     }
 
+
     @Override
-    public void onResponse(JSONArray response) {
+    public void onResponse(JSONObject response) {
         MensajeOK("Compra ingresada a Bitacora exitosamente.");
     }
 }

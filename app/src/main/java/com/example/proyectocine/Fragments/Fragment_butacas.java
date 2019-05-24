@@ -14,6 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -43,6 +44,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
     public RequestQueue requestQueue;
     public JsonArrayRequest jsonArrayRequest;
     public String mensajeAccion = "";
+    public static final int MY_DEFAULT_TIMEOUT = 15000;
     public Fragment_butacas() { }
 
     @Override
@@ -749,15 +751,15 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
         int tam = vg.getListaAsientos().size();
         TextView input = vg.getTextHelper();
         String dato = "";
-            for(int i = 0; i < tam; i++){
-                if(tam == 1){
-                    dato += vg.getListaAsientos().get(i);
-                    input.setText(dato);
-                } else {
-                    dato += vg.getListaAsientos().get(i)+",";
-                    input.setText(dato);
-                }
+        for(int i = 0; i < tam; i++){
+            if(tam == 1){
+                dato += vg.getListaAsientos().get(i);
+                input.setText(dato);
+            } else {
+                dato += vg.getListaAsientos().get(i)+",";
+                input.setText(dato);
             }
+        }
     }
 
     private void Mensaje(String msg){ Toast.makeText(getActivity(), msg,Toast.LENGTH_SHORT).show();};
@@ -780,11 +782,16 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
     private void ConsultarButacas(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.10/Android/v1/consultarButacas.php?id_pelicula="+vg.getIdPelicula()+
+        String url = "http://192.168.0.107/Android/v1/consultarButacas.php?id_pelicula="+vg.getIdPelicula()+
                 "&dia="+vg.getDiaFuncion()+"&hora="+vg.getHoraFuncion();
         mensajeAccion = "ListarFunciones";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
         requestQueue = (RequestQueue) Volley.newRequestQueue(getActivity());
+
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_DEFAULT_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         requestQueue.add(jsonArrayRequest);
     }
@@ -811,7 +818,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
     private boolean PermitirIncremento(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        if(contador < vg.getButacasSeleccionadas()){
+        if(contador <= vg.getButacasSeleccionadas()){
             contador++;
             return true;
         } else {return false;}
@@ -842,16 +849,16 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
             for(int i = 0; i < response.length(); i++) {
 
-                        String temp = response.get(i).toString();
-                        JSONObject jsonObject = new JSONObject(temp);
+                String temp = response.get(i).toString();
+                JSONObject jsonObject = new JSONObject(temp);
 
-                        ObjetoBitacora obj = new ObjetoBitacora();
-                        obj.setAsientoEnUso(jsonObject.getString("Asiento"));
+                ObjetoBitacora obj = new ObjetoBitacora();
+                obj.setAsientoEnUso(jsonObject.getString("Asiento"));
 
-                        asientos.add(obj);
-                    }
-                    VariablesGlobales vg = VariablesGlobales.getInstance();
-                    vg.setListaBitacora(asientos);
+                asientos.add(obj);
+            }
+            VariablesGlobales vg = VariablesGlobales.getInstance();
+            vg.setListaBitacora(asientos);
 
             ObtenerButacasOcupadasPorFuncion(vg);
 
