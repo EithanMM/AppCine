@@ -81,7 +81,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
 
     public void ObtenerTodasFunciones(Context context, VariablesGlobales variable){
-        String url = "http://192.168.0.10/Android/v1/mostrarFunciones.php";
+        String url = "http://192.168.0.7/Android/v1/mostrarFunciones.php";
         mensajeAccion = "ListarFunciones";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
         requestQueue = Volley.newRequestQueue(context);

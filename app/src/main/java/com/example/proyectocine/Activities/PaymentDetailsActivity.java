@@ -63,7 +63,7 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
     private void InsertarEnBitacora(){
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.10/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
+        String url = "http://192.168.0.7/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
 
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
         requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -113,10 +113,11 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        MensajeOK("Compra ingresada a Bitacora exitosamente.");
+        MensajeOK("No inserta en bitacora: "+error.toString());
     }
 
     @Override
     public void onResponse(JSONArray response) {
+        MensajeOK("Compra ingresada a Bitacora exitosamente.");
     }
 }
