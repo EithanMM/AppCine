@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -66,10 +67,10 @@ public class claseBase extends AppCompatActivity  {
     private VariablesGlobales vg = VariablesGlobales.getInstance();
 
 
-    private TextView cedula;
-    private TextView nombre;
-    private TextView apellido;
-    private TextView correo;
+    private EditText cedula;
+    private EditText nombre;
+    private EditText apellido;
+    private EditText correo;
 
     public ArrayList<ObjetoFuncion> funciones = new ArrayList<ObjetoFuncion>();
     public ArrayList<ObjetoBitacora> bitacora = new ArrayList<ObjetoBitacora>();
@@ -287,7 +288,7 @@ public class claseBase extends AppCompatActivity  {
         });
     }// fin de OnclickDelButton
 
-    public void InicializamosTextViewsParaCorreo(TextView cedula, TextView nombre, TextView apellido, TextView correo){
+    public void InicializamosTextViewsParaCorreo(EditText cedula, EditText nombre, EditText apellido, EditText correo){
         this.cedula = cedula;
         this.nombre =  nombre;
         this.apellido =  apellido;
@@ -307,18 +308,68 @@ public class claseBase extends AppCompatActivity  {
         this.vista_total = vista_total;
         this.btnEscogerCampos = btnEscogerCampos;
     }
-
-    private void EnviarEmail(Intent intento) {
-        if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
-            // MensajeOK(("Compra realizada exitosamente!"));
-            LimpiarListaAsientos();
-
-            startActivityForResult(intento, PAYPAL_REQUEST_CODE);
-            // startActivity(intento);
-
+    private boolean emailValido() {
+        String message = correo.getText().toString().trim();
+        if (message.isEmpty()) {
+            correo.setError("Campo correo está vacío");
+            return false;
         } else {
-            MensajeOK("Ocurrio un error a la hora de realizar el pago.");
+            correo.setError(null);
+            return true;
         }
+    }
+
+    private boolean cedulaValido() {
+        String message = cedula.getText().toString().trim();
+        if (message.isEmpty()) {
+            cedula.setError("Campo cedula está vacío");
+            return false;
+        } else {
+            cedula.setError(null);
+            return true;
+        }
+    }
+
+    private boolean nombreValido() {
+        String message = nombre.getText().toString().trim();
+        if (message.isEmpty()) {
+            nombre.setError("Campo nombre está vacío");
+            return false;
+        } else {
+            nombre.setError(null);
+            return true;
+        }
+    }
+
+    private boolean apellidoValido() {
+        String message = apellido.getText().toString().trim();
+        if (message.isEmpty()) {
+            apellido.setError("Campo apellido está vacío");
+            return false;
+        } else {
+            apellido.setError(null);
+            return true;
+        }
+    }
+    private void EnviarEmail(Intent intento) {
+
+        if (!emailValido() | !nombreValido() | !apellidoValido() | !cedulaValido()) {
+            return;
+        }else{
+
+            if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
+                // MensajeOK(("Compra realizada exitosamente!"));
+                LimpiarListaAsientos();
+
+                startActivityForResult(intento, PAYPAL_REQUEST_CODE);
+                // startActivity(intento);
+
+            } else {
+                MensajeOK("Ocurrio un error a la hora de realizar el pago.");
+            }
+        }
+
+
     }
 
     public boolean Validaciones(){

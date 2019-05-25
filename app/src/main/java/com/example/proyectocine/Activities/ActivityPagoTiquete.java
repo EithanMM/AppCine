@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,10 +22,10 @@ import java.math.BigDecimal;
 
 public class ActivityPagoTiquete extends claseBase {
 
-    TextView cedula;
-    TextView nombre;
-    TextView apellido;
-    TextView correo;
+    EditText cedula;
+    EditText nombre;
+    EditText apellido;
+    EditText correo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +40,10 @@ public class ActivityPagoTiquete extends claseBase {
         OnclickDelButton(R.id.btn_realiar_pago);
         OnclickDelButton(R.id.btn_vovler_seleccion_butacas);
 
-        cedula = (TextView) findViewById(R.id.cedula_input);
-        nombre = (TextView) findViewById(R.id.nombre_input);
-        apellido = (TextView) findViewById(R.id.apellido_input);
-        correo = (TextView) findViewById(R.id.correo_input);
+        cedula =  findViewById(R.id.cedula_input_edit);
+        nombre =  findViewById(R.id.nombre_input_edit);
+        apellido =  findViewById(R.id.apellido_input_edit);
+        correo =  findViewById(R.id.correo_input_edit);
 
 
         InicializamosTextViewsParaCorreo(cedula,nombre,apellido,correo);

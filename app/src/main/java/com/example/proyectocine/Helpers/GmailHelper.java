@@ -2,6 +2,7 @@ package com.example.proyectocine.Helpers;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import java.io.UnsupportedEncodingException;
@@ -44,7 +45,7 @@ public class GmailHelper {
     }
 
 
-    public boolean EnviarEmail(TextView cedula, TextView nombre, TextView apellido, TextView correo, VariablesGlobales vg){
+    public boolean EnviarEmail(EditText cedula, EditText nombre, EditText apellido, EditText correo, VariablesGlobales vg){
         prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.socketFactory.port", "465");
