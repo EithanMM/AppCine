@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.proyectocine">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,13 +12,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".Activities.Bienvenida"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_bienvenida"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.PaymentDetailsActivity" />
+        <activity android:name=".Activities.ActivityCeds">
+
+        </activity>
+        <activity android:name=".Activities.ActividadBoletos" />
+        <activity
+            android:name=".Activities.ActivityInfoPelicula"
+            android:label="@string/title_activity_info_pelicula"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Activities.ActivityPagoTiquete" />
+        <activity android:name=".Activities.ActivitySeleccionButacas" />
+        <activity android:name=".Activities.MainActivity" />
     </application>
 
 </manifest>
