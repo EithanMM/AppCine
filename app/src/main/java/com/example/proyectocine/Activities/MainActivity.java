@@ -73,12 +73,12 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
 
         sliderLayout = findViewById(R.id.imageSlider);
-        sliderLayout.setIndicatorAnimation(IndicatorAnimations.DROP); //set indicator animation by using SliderLayout.Animations. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        sliderLayout.setScrollTimeInSec(1); //set scroll delay in seconds :
+        sliderLayout.setIndicatorAnimation(IndicatorAnimations.DROP);
+        sliderLayout.setScrollTimeInSec(1);
 
         peliculasEnSlider();
 
-        // caca();
+
     }
 
 
@@ -100,7 +100,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
     private void peliculasEnSlider() {
 
-        for (int i = 0; i <= 7; i++) {
+        for (int i = 0; i <= 9; i++) {
 
             DefaultSliderView sliderView = new DefaultSliderView(this);
 
@@ -145,6 +145,16 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
                     sliderView.setDescription("Coco");
 
                     break;
+                case 8:
+                    sliderView.setImageDrawable(R.drawable.forma_agua);
+                    sliderView.setDescription("Forma del agua");
+
+                    break;
+                case 9:
+                    sliderView.setImageDrawable(R.drawable.dragon_ball);
+                    sliderView.setDescription("Dragon Ball");
+
+                    break;
 
             }
 
@@ -153,7 +163,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
             sliderView.setOnSliderClickListener(new SliderView.OnSliderClickListener() {
                 @Override
                 public void onSliderClick(SliderView sliderView) {
-                    Toast.makeText(MainActivity.this, "Sería tuanis mandarlo al activity de Antohny", Toast.LENGTH_SHORT).show();
+
                 }
             });
 
