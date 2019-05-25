@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -22,13 +25,16 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.mail.Authenticator;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import static android.content.ContentValues.TAG;
 
@@ -36,7 +42,8 @@ public class GmailHelper {
 
     Session session = null;
     Properties prop = null;
-    private String Destino, Titulo, Mensaje;
+    private String Destino, Titulo;
+    MimeMultipart Mensaje = new MimeMultipart("related");
     private static String cryptoPass = "sup3rS3xy";
     public boolean email_enviado;
 
@@ -45,7 +52,7 @@ public class GmailHelper {
     }
 
 
-    public boolean EnviarEmail(EditText cedula, EditText nombre, EditText apellido, EditText correo, VariablesGlobales vg){
+    public boolean EnviarEmail(EditText cedula, EditText nombre, EditText apellido, EditText correo, VariablesGlobales vg, String archivo){
         prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.socketFactory.port", "465");
@@ -57,7 +64,7 @@ public class GmailHelper {
 
         Destino = correo.getText().toString();
         Titulo = "Pago de Tiquete - CineTI";
-        Mensaje = ContenidoMensaje(cedula.getText().toString(), nombre.getText().toString(), apellido.getText().toString(), vg);
+       ContenidoMensaje(cedula.getText().toString(), nombre.getText().toString(), apellido.getText().toString(), vg, archivo);
 
 
         session = Session.getDefaultInstance(prop, new Authenticator() {
@@ -82,7 +89,7 @@ public class GmailHelper {
                 message.setFrom(new InternetAddress("cineTIMoviles@gmail.com")); /*Correo de la "empresa". */
                 message.setRecipients(Message.RecipientType.TO,InternetAddress.parse(Destino)); /*Almacena el correo del destinatario.*/
                 message.setSubject(Titulo); /*Almacena el Titulo del mensaje.*/
-                message.setContent(Mensaje, "text/html; charset=utf-8"); /*Determina la codificacion del mensaje.*/
+                message.setContent(Mensaje); /*Determina la codificacion del mensaje.*/
 
                 Transport.send(message); /*Sen envia el mensaje*/
 
@@ -100,33 +107,57 @@ public class GmailHelper {
         }
     }
 
-    private String ContenidoMensaje(String cedula, String nombre, String apellido, VariablesGlobales vg){
-            return "<html>"+
-                    "<head><h1>CineTI</h1></head>"+
-                    "<body><p></p>"+
-                    "<h2>Información Suministrada</h2>"+
-                    "<p></p>"+
-                    "<h5>Cédula</h5>"+
-                    "<p>"+cedula+"</p>"+
-                    "<hr>"+
-                    "<h5>Nombre Completo</h5>"+
-                    "<p>"+nombre+" "+apellido+"</p>"+
-                    "<hr>"+
-                    "<h5>Película</h5>"+
-                    "<p>"+vg.getNombrePelicula()+"</p>"+
-                    "<hr>"+
-                    "<h5>Función</h5>"+
-                    "<p>"+vg.getDiaFuncion()+" "+FormatoHora(vg.getHoraFuncion().toString())+"</p>"+
-                    "<hr>"+
-                    "<h5>Asientos</h5>"+
-                    "<p>"+ObtenerAsientosSeleccionados(vg)+"</p>"+
-                    "<hr>"+
-                    "<h5>Precio</h5>"+
-                    "<p>"+CalcularPrecio(vg)+"</p>"+
-                    "<hr>"+
-                    "<p></p>"+
-                    "<h4><i>Gracias por preferirnos</i></h4>"+
+    private void ContenidoMensaje(String cedula, String nombre, String apellido, VariablesGlobales vg, String archivo){
+        String cuerpo;
+
+        try {
+            cuerpo = "<html>" +
+                    "<head><h1>CineTI</h1></head>" +
+                    "<body><p></p>" +
+                    "<h2>Información Suministrada</h2>" +
+                    "<p></p>" +
+                    "<h5>Cédula</h5>" +
+                    "<p>" + cedula + "</p>" +
+                    "<hr>" +
+                    "<h5>Nombre Completo</h5>" +
+                    "<p>" + nombre + " " + apellido + "</p>" +
+                    "<hr>" +
+                    "<h5>Película</h5>" +
+                    "<p>" + vg.getNombrePelicula() + "</p>" +
+                    "<hr>" +
+                    "<h5>Función</h5>" +
+                    "<p>" + vg.getDiaFuncion() + " " + FormatoHora(vg.getHoraFuncion().toString()) + "</p>" +
+                    "<hr>" +
+                    "<h5>Asientos</h5>" +
+                    "<p>" + ObtenerAsientosSeleccionados(vg) + "</p>" +
+                    "<hr>" +
+                    "<h5>Precio</h5>" +
+                    "<p>" + CalcularPrecio(vg) + "</p>" +
+                    "<hr>" +
+                    "<p></p>" +
+                    "<h4><i>Gracias por preferirnos</i></h4>" +
                     "</body></html>";
+
+            //Multipart multipart = new MimeMultipart("related");
+
+            BodyPart messageBodyPart = new MimeBodyPart();
+            //String htmlText = "<H1>Hello</H1><img src=\"cid:image\">";
+            messageBodyPart.setContent(cuerpo, "text/html;charset=utf-8");
+            // add it
+            Mensaje.addBodyPart(messageBodyPart);
+
+
+            BodyPart adjunto = new MimeBodyPart();
+            adjunto.setDataHandler(new DataHandler(new FileDataSource(archivo)));
+            adjunto.setFileName("codigo.png");
+
+            //Mensaje.addBodyPart(cuerpo);
+            Mensaje.addBodyPart(adjunto);
+
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 
 

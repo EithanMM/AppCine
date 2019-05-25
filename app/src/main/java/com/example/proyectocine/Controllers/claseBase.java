@@ -1,11 +1,18 @@
 package com.example.proyectocine.Controllers;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,10 +48,16 @@ import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
+import net.glxn.qrgen.android.QRCode;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -271,10 +284,48 @@ public class claseBase extends AppCompatActivity  {
                         //InsertarRegistroEnBitacora(intento);
 
 
-                        //pago con paypal
-                        pagar();
+                        TextInputLayout Mi_edittext = findViewById(R.id.cedula_input);
+                        VariablesGlobales.getInstance().setCedula(Mi_edittext.getEditText().getText().toString());
+
+                        VariablesGlobales vg = VariablesGlobales.getInstance();
+
+                        String texto = "Cedula:" + vg.getCedula() + "\n" +
+                                "Pelicula:" + vg.getNombrePelicula() + ", sala " + vg.getNombreSala() + ", a las " + vg.getHoraFuncion() + "\n" +
+                                "Asientos:" + vg.getListaAsientos().toString() + "\n" +
+                                "Precio:" + vg.getPrecioTotal() + "\n";
+
+                        Bitmap bitmap = QRCode.from(texto).bitmap();
+                        // Suponiendo que tienes un ImageView con el id ivCodigoGenerado
+
+                        // Crear stream del código QR
+                        ByteArrayOutputStream byteArrayOutputStream = QRCode.from(texto).stream();
+                        // E intentar guardar
+                        FileOutputStream fos;
+                        try {
+                            // Guardar en el almacenamiento externo con el nombre de "codigo.png"
 
 
+                            pedirPermiso();
+
+
+                            String archivo = Environment.getExternalStorageDirectory() + "/codigo.png";
+                            fos = new FileOutputStream(archivo);
+                            byteArrayOutputStream.writeTo(fos);
+                            Toast.makeText(claseBase.this, "Código guardado", Toast.LENGTH_SHORT).show();
+
+
+                            //pago con paypal
+                            vg.setBitmap(bitmap);
+                            pagar(archivo);
+
+
+                        } catch (FileNotFoundException e) {
+                            // Nota: aquí indica al usuario que algo salió mal
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            // Nota: aquí indica al usuario que algo salió mal
+                            e.printStackTrace();
+                        }
 
                         break;
                     case R.id.btn_vovler_seleccion_butacas:
@@ -287,6 +338,35 @@ public class claseBase extends AppCompatActivity  {
             }
         });
     }// fin de OnclickDelButton
+
+
+    void pedirPermiso() {
+
+        int estadoDePermiso = ContextCompat.checkSelfPermission(claseBase.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (estadoDePermiso == PackageManager.PERMISSION_GRANTED) {
+            // En caso de que haya dado permisos ponemos la bandera en true
+            // y llamar al método
+            Mensaje("Permiso concebido");
+        } else {
+            // Si no, entonces pedimos permisos. Ahora mira onRequestPermissionsResult
+            ActivityCompat.requestPermissions(claseBase.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+        }
+
+        int estadoDePermiso2 = ContextCompat.checkSelfPermission(claseBase.this, Manifest.permission.CAMERA);
+
+        if (estadoDePermiso2 == PackageManager.PERMISSION_GRANTED) {
+            // En caso de que haya dado permisos ponemos la bandera en true
+            // y llamar al método
+            Mensaje("Permiso concebido");
+        } else {
+            // Si no, entonces pedimos permisos. Ahora mira onRequestPermissionsResult
+            ActivityCompat.requestPermissions(claseBase.this,
+                    new String[]{Manifest.permission.CAMERA}, 1);
+        }
+
+    }
 
     public void InicializamosTextViewsParaCorreo(EditText cedula, EditText nombre, EditText apellido, EditText correo){
         this.cedula = cedula;
@@ -351,13 +431,13 @@ public class claseBase extends AppCompatActivity  {
             return true;
         }
     }
-    private void EnviarEmail(Intent intento) {
+    private void EnviarEmail(Intent intento, String archivo) {
 
         if (!emailValido() | !nombreValido() | !apellidoValido() | !cedulaValido()) {
             return;
         }else{
 
-            if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg)) {
+            if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg, archivo)) {
                 // MensajeOK(("Compra realizada exitosamente!"));
                 LimpiarListaAsientos();
 
@@ -568,7 +648,7 @@ public class claseBase extends AppCompatActivity  {
     /*--------------------------------------------------------------------------------------------*/
 
     //metodos para pago con paypal
-    public void pagar() {
+    public void pagar(String archivo) {
         PayPalPayment payPalPayment = new PayPalPayment(
                 new BigDecimal(String.valueOf(Integer.toString(vg.getPrecioTotal()))),
                 "USD", "CineTI", PayPalPayment.PAYMENT_INTENT_SALE
@@ -579,7 +659,7 @@ public class claseBase extends AppCompatActivity  {
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
         intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
 
-        EnviarEmail(intent);
+        EnviarEmail(intent, archivo);
 
         //startActivityForResult(intent, PAYPAL_REQUEST_CODE);
 

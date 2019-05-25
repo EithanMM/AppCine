@@ -83,7 +83,7 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
 
     public void ObtenerTodasFunciones(Context context, VariablesGlobales variable){
-        String url = "http://192.168.0.7/Android/v1/mostrarFunciones.php";
+        String url = "http://192.168.0.10/Android/v1/mostrarFunciones.php";
         mensajeAccion = "ListarFunciones";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
 
@@ -229,6 +229,15 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
                     VariablesGlobales vg = VariablesGlobales.getInstance();
                     vg.setIdPelicula(ObjetoActual.getIdPelicula());
+
+                    String nombrePelicula = null;
+                    for(int i=0; i<funciones.size();i++){
+                        if(funciones.get(i).getIdPelicula().equals(ObjetoActual.getIdPelicula())){
+                            nombrePelicula = funciones.get(i).getNombrePelicula();
+                            break;
+                        }
+                    }
+                    vg.setNombrePelicula(nombrePelicula);
 
                     Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
                     startActivity(intento);

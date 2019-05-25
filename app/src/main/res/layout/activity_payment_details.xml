@@ -8,35 +8,62 @@
 
     <TextView
         android:id="@+id/txt_id"
-        android:layout_width="188dp"
-        android:layout_height="31dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/txt_monto"
+        android:layout_width="341dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="¡Su compra ha sido realizada con exito!"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.288" />
 
     <TextView
         android:id="@+id/txt_monto"
-        android:layout_width="194dp"
-        android:layout_height="54dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/txt_status"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_id" />
-
-    <TextView
-        android:id="@+id/txt_status"
-        android:layout_width="205dp"
-        android:layout_height="52dp"
-        android:text="TextView"
+        android:layout_width="269dp"
+        android:layout_height="120dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Este es su codigo de confirmacion, el cual le fue enviado por correo electronico."
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_monto" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_id"
+        app:layout_constraintVertical_bias="0.114" />
+
+    <ImageView
+        android:id="@+id/ivCodigoGenerado"
+        android:layout_width="218dp"
+        android:layout_height="187dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.905"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/imageView15"
+        android:layout_width="239dp"
+        android:layout_height="118dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.441"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12"
+        app:srcCompat="@drawable/check" />
 
 </android.support.constraint.ConstraintLayout>

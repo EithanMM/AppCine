@@ -87,7 +87,7 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
         VariablesGlobales vg = VariablesGlobales.getInstance();
 
 
-        String url = "http://192.168.0.7/Android/v1/consultarHorarios.php?id_pelicula=" + vg.getIdPelicula();
+        String url = "http://192.168.0.10/Android/v1/consultarHorarios.php?id_pelicula=" + vg.getIdPelicula();
         mensajeAccion = "ListarHorarios";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
         requestQueue = Volley.newRequestQueue(getContext());
@@ -98,18 +98,6 @@ public class Fragment_horario extends Fragment implements Response.Listener<JSON
     }
 
 
-    public void DandoClickALosItems() {
-        ListView list = (ListView) getView().findViewById(R.id.listView1);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> paret, View viewClicked,
-                                    int position, long id) {
-                TextView textView = (TextView) viewClicked;
-                String message = "Presidente # " + (1 + position) + ", corresponde a: " + textView.getText().toString();
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
     @Override
     public void onErrorResponse(VolleyError error) {

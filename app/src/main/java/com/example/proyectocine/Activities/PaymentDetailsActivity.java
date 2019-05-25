@@ -1,11 +1,13 @@
 package com.example.proyectocine.Activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,36 +40,41 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
         setContentView(R.layout.activity_payment_details);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         getSupportActionBar().setTitle("Detalles de compra");
-        txt_id= findViewById(R.id.txt_id);
-        txt_monto= findViewById(R.id.txt_monto);
-        txt_status= findViewById(R.id.txt_status);
+       // txt_id= findViewById(R.id.txt_id);
+       // txt_monto= findViewById(R.id.txt_monto);
+       // txt_status= findViewById(R.id.txt_status);
 
 
         InsertarEnBitacora();
 
         Intent intent  = getIntent();
 
+        Bitmap bitmap = VariablesGlobales.getInstance().getBitmap();
+        // Suponiendo que tienes un ImageView con el id ivCodigoGenerado
+        ImageView imagenCodigo = findViewById(R.id.ivCodigoGenerado);
+        imagenCodigo.setImageBitmap(bitmap);
+
         try{
 
             JSONObject jsonObject = new JSONObject(intent.getStringExtra("details"));
-            verDetalles(jsonObject.getJSONObject("response"),intent.getStringExtra("monto"));
+            //verDetalles(jsonObject.getJSONObject("response"),intent.getStringExtra("monto"));
 
         }catch (Exception e){
 
         }
     }
 
-    private void verDetalles(JSONObject response, String monto) throws JSONException {
-        txt_id.setText(response.getString("id"));
-        txt_status.setText(response.getString("status"));
-        txt_monto.setText(response.getString(String.format("$%s",monto)));
+  //  private void verDetalles(JSONObject response, String monto) throws JSONException {
+  //      txt_id.setText(response.getString("id"));
+  //      txt_status.setText(response.getString("status"));
+   //     txt_monto.setText(response.getString(String.format("$%s",monto)));
 
-    }
+    //}
 
     private void InsertarEnBitacora(){
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.7/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
+        String url = "http://192.168.0.10/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
 

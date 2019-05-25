@@ -1,5 +1,6 @@
 package com.example.proyectocine.Controllers;
 
+import android.graphics.Bitmap;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -27,6 +28,11 @@ public class VariablesGlobales {
     private String NombreSala;
     private String DiaFuncion;
     private Time HoraFuncion;
+    private String cedula;
+
+
+    private Bitmap bitmap;
+
 
     private int precioTotal;
     private int totalButacas = 10;
@@ -187,4 +193,19 @@ public class VariablesGlobales {
         this.correo = correo;
     }
 
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
+    public String getCedula() {
+        return cedula;
+    }
+
+    public void setCedula(String cedula) {
+        this.cedula = cedula;
+    }
 }
