@@ -250,6 +250,13 @@ public class claseBase extends AppCompatActivity {
                         }
 
                     case R.id.btn_volver:
+                        if(vg.getButacasSeleccionadas() > 0){
+                            vg.setButacasSeleccionadas(0);
+                            vg.setAsientosSeleccionados(null);
+                            if(vg.getListaAsientos().size() > 0){
+                                vg.getListaAsientos().clear();
+                            }
+                        }
                         intento = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intento);
                         break;
@@ -508,6 +515,7 @@ public class claseBase extends AppCompatActivity {
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
+                    vg.setButacasSeleccionadas(total_boletos);
                 }
             }
         });
@@ -524,6 +532,8 @@ public class claseBase extends AppCompatActivity {
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
+                    vg.setButacasSeleccionadas(total_boletos);
+
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_edad3++;
                     total_boletos = contador_boletos_adulto + contador_boletos_edad3;
@@ -575,6 +585,8 @@ public class claseBase extends AppCompatActivity {
                     dinero = Integer.toString(result);
                     vg.setPrecioTotal(result);
                     vista_total.setText("₡ " + String.valueOf(result));
+                    vg.setButacasSeleccionadas(total_boletos);
+
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_adulto++;
                     total_boletos = contador_boletos_adulto + contador_boletos_edad3;

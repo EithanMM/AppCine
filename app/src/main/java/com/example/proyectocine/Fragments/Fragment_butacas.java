@@ -818,7 +818,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
     private boolean PermitirIncremento(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        if(contador <= vg.getButacasSeleccionadas()){
+        if(contador < vg.getButacasSeleccionadas()){
             contador++;
             return true;
         } else {return false;}
