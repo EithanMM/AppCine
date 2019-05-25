@@ -33,20 +33,20 @@ public class ActivityPagoTiquete extends claseBase {
         setContentView(R.layout.activity_pago_tiquete);
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
         Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,configuration);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, configuration);
         startService(intent);
 
 
         OnclickDelButton(R.id.btn_realiar_pago);
         OnclickDelButton(R.id.btn_vovler_seleccion_butacas);
 
-        cedula =  findViewById(R.id.cedula_input_edit);
-        nombre =  findViewById(R.id.nombre_input_edit);
-        apellido =  findViewById(R.id.apellido_input_edit);
-        correo =  findViewById(R.id.correo_input_edit);
+        cedula = findViewById(R.id.cedula_input_edit);
+        nombre = findViewById(R.id.nombre_input_edit);
+        apellido = findViewById(R.id.apellido_input_edit);
+        correo = findViewById(R.id.correo_input_edit);
 
 
-        InicializamosTextViewsParaCorreo(cedula,nombre,apellido,correo);
+        InicializamosTextViewsParaCorreo(cedula, nombre, apellido, correo);
     }
     //metodos para pago con paypal
 
@@ -64,6 +64,8 @@ public class ActivityPagoTiquete extends claseBase {
                 PaymentConfirmation paymentConfirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (paymentConfirmation != null) {
                     try {
+
+
                         VariablesGlobales vg = VariablesGlobales.getInstance();
 
                         vg.setCedulaUsuario(cedula.getText().toString());
@@ -71,12 +73,22 @@ public class ActivityPagoTiquete extends claseBase {
                         vg.setApellidosUsuario(apellido.getText().toString());
                         vg.setCorreo(correo.getText().toString());
 
-                        String payment_details = paymentConfirmation.toJSONObject().toString(4);
-                        if(Validaciones()){
-                            startActivity(new Intent(this, PaymentDetailsActivity.class)
-                                    .putExtra("details", payment_details)
-                                    .putExtra("monto", dinero));
+
+
+                        //aqui se envia el correo
+                        boolean envioCorreo =  gh.EnviarEmail(cedula, nombre, apellido, correo, vg, archivo);
+
+                        if(envioCorreo){
+                            Mensaje("Se envio el comprobante a su correo");
                         }
+
+
+                        String payment_details = paymentConfirmation.toJSONObject().toString(4);
+                        startActivity(new Intent(this, PaymentDetailsActivity.class)
+                                .putExtra("details", payment_details)
+                                .putExtra("monto", dinero));
+
+
                     } catch (Exception e) {
 
                     }

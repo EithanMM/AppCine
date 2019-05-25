@@ -1,82 +1,56 @@
 package com.example.proyectocine.Controllers;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Environment;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
-import com.example.proyectocine.Activities.PaymentDetailsActivity;
 import com.example.proyectocine.Data.DBAdapterSQL;
 import com.example.proyectocine.Helpers.GmailHelper;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
-import com.example.proyectocine.Helpers.ObjetosxDesplegar;
 import com.example.proyectocine.R;
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
 import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import net.glxn.qrgen.android.QRCode;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static android.content.ContentValues.TAG;
-
-public class claseBase extends AppCompatActivity  {
+public class claseBase extends AppCompatActivity {
 
     private DBAdapterSQL db;
-    private GmailHelper gh = new GmailHelper();
+    public GmailHelper gh = new GmailHelper();
     private VariablesGlobales vg = VariablesGlobales.getInstance();
 
 
@@ -88,9 +62,8 @@ public class claseBase extends AppCompatActivity  {
     public ArrayList<ObjetoFuncion> funciones = new ArrayList<ObjetoFuncion>();
     public ArrayList<ObjetoBitacora> bitacora = new ArrayList<ObjetoBitacora>();
 
-    private TextView cant_boletos_edad3,resta_boletos_edad3,suma_boletos_edad3,
-            cant_boletos_adulto,resta_boletos_adulto,suma_boletos_adulto
-            ,vista_total;
+    private TextView cant_boletos_edad3, resta_boletos_edad3, suma_boletos_edad3,
+            cant_boletos_adulto, resta_boletos_adulto, suma_boletos_adulto, vista_total;
 
 
     //views para detalles de pago paypal
@@ -98,12 +71,12 @@ public class claseBase extends AppCompatActivity  {
     TextView txt_id, txt_monto, txt_status;
     public String dinero;
     public int result;
-    public static  final int PAYPAL_REQUEST_CODE = 7171;
+    public static final int PAYPAL_REQUEST_CODE = 7171;
     public PayPalConfiguration configuration = new PayPalConfiguration().environment(
             PayPalConfiguration.ENVIRONMENT_SANDBOX).clientId(PAYPAL_CLIENT_ID);
 
     private Button btnEscogerCampos;
-    private int contador_boletos_edad3  = 0;
+    private int contador_boletos_edad3 = 0;
     private int contador_boletos_adulto = 0;
     private final int PRECIO_BOLETO_ADULTO = 3200;
     private final int PRECIO_BOLETO_TERCERA_EDAD = 2500;
@@ -126,6 +99,8 @@ public class claseBase extends AppCompatActivity  {
             "f])+)\\])";
 
     private String NAME_REGEX = "^\\s*[a-zA-Z,\\sÁÉÍÓÚáéíóú]+\\s*$";
+
+    public String archivo;
 
 
     public void MensajeOK(String msg) {
@@ -157,7 +132,7 @@ public class claseBase extends AppCompatActivity  {
     //String drawName = "algo";
     // int resID = getResources().getIdentifier(drawName, "drawable", getPackageName());
 
-    public void DesplegarTodosLosRegistros (){
+    public void DesplegarTodosLosRegistros() {
 /*            if (db != null) {
                 MensajeOK(db.ObtenerTodosLosRegistros());
             } else {
@@ -166,16 +141,16 @@ public class claseBase extends AppCompatActivity  {
     }
 
 
-    public void DropearYCrearBD(){
+    public void DropearYCrearBD() {
         MensajeOK(db.DropearYCrearBD());
     }
 
 
-    public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion(){
-        return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(),vg.getHoraFuncion());
+    public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion() {
+        return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(), vg.getHoraFuncion());
     }
 
-    public void InsertarRegistroEnBitacora(Intent intento){
+    public void InsertarRegistroEnBitacora(Intent intento) {
 //            ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
 //            String msg = "";
 //            for(ObjetoFuncion of : funciones){
@@ -205,9 +180,9 @@ public class claseBase extends AppCompatActivity  {
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
 
-    public int DeterminarImagen(String id_pelicula){
+    public int DeterminarImagen(String id_pelicula) {
         int res = 0;
-        switch(Integer.parseInt(id_pelicula)){
+        switch (Integer.parseInt(id_pelicula)) {
             case 1:
                 //Coco
                 res = R.drawable.coco;
@@ -253,9 +228,9 @@ public class claseBase extends AppCompatActivity  {
     }
 
     public void OnclickDelButton(int ref) {
-        View view =findViewById(ref);
+        View view = findViewById(ref);
         Button miButton = (Button) view;
-        miButton.setOnClickListener(new View.OnClickListener(){
+        miButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intento;
@@ -267,7 +242,7 @@ public class claseBase extends AppCompatActivity  {
                             Mensaje("Debe seleccionar almenos una butaca.");
                             break;
                         } else {
-                            TextView butacas_seleccionadas = (TextView)findViewById(R.id.input_asientos);
+                            TextView butacas_seleccionadas = (TextView) findViewById(R.id.input_asientos);
                             vg.setAsientosSeleccionados(butacas_seleccionadas.getText().toString());
                             intento = new Intent(getApplicationContext(), ActivityPagoTiquete.class);
                             startActivity(intento);
@@ -308,7 +283,7 @@ public class claseBase extends AppCompatActivity  {
                             pedirPermiso();
 
 
-                            String archivo = Environment.getExternalStorageDirectory() + "/codigo.png";
+                            archivo = Environment.getExternalStorageDirectory() + "/codigo.png";
                             fos = new FileOutputStream(archivo);
                             byteArrayOutputStream.writeTo(fos);
                             Toast.makeText(claseBase.this, "Código guardado", Toast.LENGTH_SHORT).show();
@@ -368,17 +343,17 @@ public class claseBase extends AppCompatActivity  {
 
     }
 
-    public void InicializamosTextViewsParaCorreo(EditText cedula, EditText nombre, EditText apellido, EditText correo){
+    public void InicializamosTextViewsParaCorreo(EditText cedula, EditText nombre, EditText apellido, EditText correo) {
         this.cedula = cedula;
-        this.nombre =  nombre;
-        this.apellido =  apellido;
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.correo = correo;
     }
 
     public void iniciarParametrosTextViewParaBoletos(TextView cant_boletos_edad3, TextView resta_boletos_edad3,
                                                      TextView suma_boletos_edad3, TextView cant_boletos_adulto,
                                                      TextView resta_boletos_adulto, TextView suma_boletos_adulto,
-                                                     TextView vista_total, Button btnEscogerCampos){
+                                                     TextView vista_total, Button btnEscogerCampos) {
         this.cant_boletos_edad3 = cant_boletos_edad3;
         this.resta_boletos_edad3 = resta_boletos_edad3;
         this.suma_boletos_edad3 = suma_boletos_edad3;
@@ -388,7 +363,8 @@ public class claseBase extends AppCompatActivity  {
         this.vista_total = vista_total;
         this.btnEscogerCampos = btnEscogerCampos;
     }
-    private boolean emailValido() {
+
+    public boolean emailValido() {
         String message = correo.getText().toString().trim();
         if (message.isEmpty()) {
             correo.setError("Campo correo está vacío");
@@ -399,7 +375,7 @@ public class claseBase extends AppCompatActivity  {
         }
     }
 
-    private boolean cedulaValido() {
+    public boolean cedulaValido() {
         String message = cedula.getText().toString().trim();
         if (message.isEmpty()) {
             cedula.setError("Campo cedula está vacío");
@@ -410,7 +386,7 @@ public class claseBase extends AppCompatActivity  {
         }
     }
 
-    private boolean nombreValido() {
+    public boolean nombreValido() {
         String message = nombre.getText().toString().trim();
         if (message.isEmpty()) {
             nombre.setError("Campo nombre está vacío");
@@ -421,7 +397,7 @@ public class claseBase extends AppCompatActivity  {
         }
     }
 
-    private boolean apellidoValido() {
+    public boolean apellidoValido() {
         String message = apellido.getText().toString().trim();
         if (message.isEmpty()) {
             apellido.setError("Campo apellido está vacío");
@@ -431,28 +407,25 @@ public class claseBase extends AppCompatActivity  {
             return true;
         }
     }
+
     private void EnviarEmail(Intent intento, String archivo) {
 
         if (!emailValido() | !nombreValido() | !apellidoValido() | !cedulaValido()) {
             return;
-        }else{
+        } else {
 
-            if (gh.EnviarEmail(cedula, nombre, apellido, correo, vg, archivo)) {
-                // MensajeOK(("Compra realizada exitosamente!"));
-                LimpiarListaAsientos();
 
-                startActivityForResult(intento, PAYPAL_REQUEST_CODE);
-                // startActivity(intento);
+            LimpiarListaAsientos();
 
-            } else {
-                MensajeOK("Ocurrio un error a la hora de realizar el pago.");
-            }
+            startActivityForResult(intento, PAYPAL_REQUEST_CODE);
+            // startActivity(intento);
+
         }
 
 
     }
 
-    public boolean Validaciones(){
+    public boolean Validaciones() {
         boolean respuesta = false;
         VariablesGlobales vg = VariablesGlobales.getInstance();
         Pattern name_pattern = Pattern.compile(NAME_REGEX);
@@ -501,8 +474,7 @@ public class claseBase extends AppCompatActivity  {
     }
 
 
-
-    public String FormatoHora(String hora){
+    public String FormatoHora(String hora) {
         Calendar calendar = GenerarCalendario(hora);
         Date d = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
@@ -521,16 +493,16 @@ public class claseBase extends AppCompatActivity  {
         return cal;
     }
 
-    public void agregarEventos(){
+    public void agregarEventos() {
 
         resta_boletos_edad3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_edad3 > 0){
+                if (contador_boletos_edad3 > 0) {
 
                     contador_boletos_edad3--;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
@@ -540,13 +512,13 @@ public class claseBase extends AppCompatActivity  {
             }
         });
 
-        suma_boletos_edad3.setOnClickListener(new View.OnClickListener(){
+        suma_boletos_edad3.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(contador_boletos_edad3 == 0 && total_boletos<10){
+                if (contador_boletos_edad3 == 0 && total_boletos < 10) {
                     contador_boletos_edad3++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
 
                     cant_boletos_edad3.setText("" + contador_boletos_edad3);
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
@@ -554,48 +526,49 @@ public class claseBase extends AppCompatActivity  {
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_edad3++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
-                    cant_boletos_edad3.setText(""+contador_boletos_edad3);
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
+                    cant_boletos_edad3.setText("" + contador_boletos_edad3);
                     vg.setButacasSeleccionadas(total_boletos);
 
-                    result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                }  else {
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else {
                     Mensaje("Limite de butacas alcanzado.");
                 }
             }
         });
 
 
-        resta_boletos_adulto.setOnClickListener(new View.OnClickListener(){
+        resta_boletos_adulto.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_adulto > 0){
+                if (contador_boletos_adulto > 0) {
                     contador_boletos_adulto--;
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
 
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
+                    cant_boletos_adulto.setText("" + contador_boletos_adulto);
 
                     vg.setButacasSeleccionadas(total_boletos);
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
+                    vista_total.setText("₡ " + String.valueOf(result));
                 }
-            }});
+            }
+        });
 
 
         suma_boletos_adulto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(contador_boletos_adulto == 0 && total_boletos<10){
+                if (contador_boletos_adulto == 0 && total_boletos < 10) {
                     contador_boletos_adulto++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
 
                     cant_boletos_adulto.setText("" + contador_boletos_adulto);
                     result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
@@ -604,14 +577,14 @@ public class claseBase extends AppCompatActivity  {
                     vista_total.setText("₡ " + String.valueOf(result));
                 } else if (contador_boletos_edad3 + contador_boletos_adulto < 10) {
                     contador_boletos_adulto++;
-                    total_boletos =  contador_boletos_adulto + contador_boletos_edad3;
-                    cant_boletos_adulto.setText(""+contador_boletos_adulto);
+                    total_boletos = contador_boletos_adulto + contador_boletos_edad3;
+                    cant_boletos_adulto.setText("" + contador_boletos_adulto);
                     vg.setButacasSeleccionadas(total_boletos);
 
-                    int result =  (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
+                    int result = (PRECIO_BOLETO_TERCERA_EDAD * contador_boletos_edad3) + (PRECIO_BOLETO_ADULTO * contador_boletos_adulto);
                     vg.setPrecioTotal(result);
-                    vista_total.setText("₡ "+String.valueOf(result));
-                }  else {
+                    vista_total.setText("₡ " + String.valueOf(result));
+                } else {
                     Mensaje("Limite de butacas alcanzado.");
                 }
             }
@@ -619,14 +592,14 @@ public class claseBase extends AppCompatActivity  {
         });
 
 
-        btnEscogerCampos.setOnClickListener(new View.OnClickListener(){
+        btnEscogerCampos.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
                 int cant_edad3 = Integer.parseInt((cant_boletos_edad3.getText().toString()));
                 int cant_adulto = Integer.parseInt((cant_boletos_adulto.getText().toString()));
-                if(cant_edad3 != 0 || cant_adulto != 0){
+                if (cant_edad3 != 0 || cant_adulto != 0) {
 
                     int total_boletos = Integer.parseInt(cant_boletos_edad3.getText().toString())
                             + Integer.parseInt(cant_boletos_adulto.getText().toString());
@@ -635,7 +608,7 @@ public class claseBase extends AppCompatActivity  {
                     Intent intento = new Intent(getApplicationContext(), ActivitySeleccionButacas.class);
                     startActivity(intento);
 
-                }else{
+                } else {
                     Mensaje("Debe seleccionar cuantos boletos deseea comprar.");
                 }
             }

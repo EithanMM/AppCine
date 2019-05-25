@@ -26,9 +26,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.PaymentDetailsActivity" />
-        <activity android:name=".Activities.ActivityCeds">
-
-        </activity>
         <activity android:name=".Activities.ActividadBoletos" />
         <activity
             android:name=".Activities.ActivityInfoPelicula"

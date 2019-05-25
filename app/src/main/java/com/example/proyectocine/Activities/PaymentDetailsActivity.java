@@ -74,7 +74,7 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
     private void InsertarEnBitacora(){
 
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.10/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
+        String url = "http://192.168.0.7/Android/v1/registroBitacora.php?"+ConstruirUrl(vg);
 
         jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null, this, this);
 
