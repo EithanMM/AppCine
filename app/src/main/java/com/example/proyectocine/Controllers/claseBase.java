@@ -169,14 +169,7 @@ public class claseBase extends AppCompatActivity {
 //            }
     }
 
-    public String DesplegarInfoPelicula(String idPelicula) {
 
-        if (db != null) {
-            return db.ObtenerInfoPelicula(idPelicula);
-        } else {
-            return "BD nula";
-        }
-    }
     /*--------------------------------------------------------------------------------------------*/
     /*---------------------------------Otros Metodos----------------------------------------------*/
 

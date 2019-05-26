@@ -19,14 +19,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proyectocine.Fragments.Fragment_horario;
+import com.example.proyectocine.Helpers.ObjetoFuncion;
 import com.example.proyectocine.R;
 import com.example.proyectocine.Fragments.Fragment_sinopsis;
 import com.example.proyectocine.Controllers.VariablesGlobales;
 import com.example.proyectocine.Controllers.claseBase;
 
-public class ActivityInfoPelicula extends claseBase {
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.sql.Time;
+
+public class ActivityInfoPelicula extends claseBase implements Response.Listener<JSONArray>, Response.ErrorListener {
+
+    Fragment_sinopsis tab2 = null;
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
 
@@ -58,13 +72,11 @@ public class ActivityInfoPelicula extends claseBase {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        ImageView midib = (ImageView)findViewById(R.id.imageViewPelicula);
+        ImageView midib = (ImageView) findViewById(R.id.imageViewPelicula);
         midib.setImageResource(DeterminarImagen(vg.getIdPelicula()));
 
 
     }
-
-
 
 
     @Override
@@ -106,16 +118,17 @@ public class ActivityInfoPelicula extends claseBase {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             VariablesGlobales vg = VariablesGlobales.getInstance();
-            switch (position){
+            switch (position) {
                 case 0:
                     Fragment_horario tab1 = new Fragment_horario();
                     //tab1.setIdPelicula(vg.getIdPelicula());
 
                     return tab1;
                 case 1:
-                    Fragment_sinopsis tab2 = new Fragment_sinopsis();
-                    tab2.setIdPelicula(vg.getIdPelicula());
-                    tab2.setSinopsis(DesplegarInfoPelicula(vg.getIdPelicula()));
+
+                    tab2 = new Fragment_sinopsis();
+
+                    //DesplegarInfoPelicula(vg.getIdPelicula());
 
                     return tab2;
 
@@ -131,4 +144,49 @@ public class ActivityInfoPelicula extends claseBase {
             return 2;
         }
     }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResponse(JSONArray response) {
+
+        try {
+            for (int i = 0; i < response.length(); i++) {
+
+                String temp = response.get(i).toString();
+                JSONObject jsonObject = new JSONObject(temp);
+                String sinopsis = jsonObject.getString("Sinopsis");
+                String publico  = jsonObject.getString("Publico");
+                String tipo = jsonObject.getString("Tipo");
+                String msg= "Publico: "+publico+"      Tipo: "+tipo+" \n\n\n\n Sinopsis: "+sinopsis+ "\n";
+                tab2.setSinopsis(msg);
+
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void DesplegarInfoPelicula(String idPelicula) {
+        String url = "http://192.168.0.10/Android/v1/consultarSinopsis.php?id_pelicula="+idPelicula;
+
+        jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
+
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(
+                MY_DEFAULT_TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue = Volley.newRequestQueue(this);
+
+        requestQueue.add(jsonArrayRequest);
+
+    }
+
+
 }
