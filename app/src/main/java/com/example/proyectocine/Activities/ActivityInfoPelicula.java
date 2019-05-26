@@ -174,7 +174,7 @@ public class ActivityInfoPelicula extends claseBase implements Response.Listener
     }
 
     public void DesplegarInfoPelicula(String idPelicula) {
-        String url = "http://192.168.0.10/Android/v1/consultarSinopsis.php?id_pelicula="+idPelicula;
+        String url = "http://192.168.150.1/Android/v1/consultarSinopsis.php?id_pelicula="+idPelicula;
 
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
 

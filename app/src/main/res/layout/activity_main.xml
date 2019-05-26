@@ -9,8 +9,8 @@
 
     <ListView
         android:id="@+id/list_view_peliculas"
-        android:layout_width="395dp"
-        android:layout_height="231dp"
+        android:layout_width="381dp"
+        android:layout_height="333dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

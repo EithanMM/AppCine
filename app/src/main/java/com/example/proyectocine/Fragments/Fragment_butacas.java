@@ -782,7 +782,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
 
     private void ConsultarButacas(){
         VariablesGlobales vg = VariablesGlobales.getInstance();
-        String url = "http://192.168.0.10/Android/v1/consultarButacas.php?id_pelicula="+vg.getIdPelicula()+
+        String url = "http://192.168.150.1/Android/v1/consultarButacas.php?id_pelicula="+vg.getIdPelicula()+
                 "&dia="+vg.getDiaFuncion()+"&hora="+vg.getHoraFuncion();
         mensajeAccion = "ListarFunciones";
         jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, url, null, this, this);
