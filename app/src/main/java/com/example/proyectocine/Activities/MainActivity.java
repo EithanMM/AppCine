@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,10 +61,12 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView link = (TextView) findViewById(R.id.video);
+        link.setMovementMethod(LinkMovementMethod.getInstance());
+
         prefs = getSharedPreferences("cineTI", MODE_PRIVATE);
-        CrearYAbrirBaseDeDatos();
         if(prefs.getBoolean("firstrun", true)){
-            DropearYCrearBD();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
         getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
@@ -81,7 +84,6 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
     }
 
-
     public void ObtenerTodasFunciones(Context context, VariablesGlobales variable){
         String url = "http://192.168.150.1/Android/v1/mostrarFunciones.php";
         mensajeAccion = "ListarFunciones";
@@ -95,8 +97,6 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
 
         requestQueue.add(jsonArrayRequest);
     }
-
-
 
     private void peliculasEnSlider() {
 
@@ -206,10 +206,6 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
                 vg.setNombreSala(funcion.get(position).getNombreSala());
                 vg.setIdPelicula(funcion.get(position).getIdPelicula());
 
-                ArrayList<ObjetoBitacora> registros = ObtenerRegistrosDeBitacoraPorFuncion();
-                vg.setListaBitacora(registros);
-
-                //Intent intento = new Intent(getApplicationContext(), ActivityInfoPelicula.class); /*Modulo de Tony*/
                 Intent intento = new Intent(getApplicationContext(), ActividadBoletos.class); /* <- Modulo de Eithan*/
                 startActivity(intento);
             }
@@ -344,7 +340,4 @@ public class MainActivity extends claseBase implements Response.Listener<JSONArr
         }
         LlenarListaObjetos();
     }
-
-
-
 }

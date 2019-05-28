@@ -17,6 +17,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="linktosite"><a href="https://www.youtube.com/watch?v=nckP4no3-ss&amp;t=5s">ver video</a></string>
 
-    <string name="title_activity_bienvenida">Bienvenida</string>
+    <string name="title_activity_bienvenida">CineTI</string>
 </resources>

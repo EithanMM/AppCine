@@ -299,7 +299,7 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
             case "DA5":
                 if(PermitirIncremento()){
                     midib.setImageResource(R.drawable.butaca_seleccionada);
-                    midib.setTag("OA5");
+                    midib.setTag("SA5");
                     AgregarButacaEnLista(vg,"A5");
                 }
                 break;
@@ -307,8 +307,8 @@ public class Fragment_butacas extends Fragment implements Response.Listener<JSON
             case "DB1":
                 if(PermitirIncremento()){
                     midib.setImageResource(R.drawable.butaca_seleccionada);
-                    midib.setTag("SB2");
-                    AgregarButacaEnLista(vg,"B2");
+                    midib.setTag("SB1");
+                    AgregarButacaEnLista(vg,"B1");
                 }
                 break;
 

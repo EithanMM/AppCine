@@ -54,7 +54,7 @@ public class ActivityInfoPelicula extends claseBase implements Response.Listener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_pelicula);
 
-        CrearYAbrirBaseDeDatos();
+
         VariablesGlobales vg = VariablesGlobales.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

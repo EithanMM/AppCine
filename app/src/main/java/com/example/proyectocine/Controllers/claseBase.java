@@ -23,7 +23,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.proyectocine.Activities.ActivityPagoTiquete;
 import com.example.proyectocine.Activities.ActivitySeleccionButacas;
 import com.example.proyectocine.Activities.MainActivity;
-import com.example.proyectocine.Data.DBAdapterSQL;
 import com.example.proyectocine.Helpers.GmailHelper;
 import com.example.proyectocine.Helpers.ObjetoBitacora;
 import com.example.proyectocine.Helpers.ObjetoFuncion;
@@ -49,7 +48,6 @@ import java.util.regex.Pattern;
 
 public class claseBase extends AppCompatActivity {
 
-    private DBAdapterSQL db;
     public GmailHelper gh = new GmailHelper();
     private VariablesGlobales vg = VariablesGlobales.getInstance();
 
@@ -122,52 +120,7 @@ public class claseBase extends AppCompatActivity {
     }
 
     /*-----------------------------Metodos publicos de manejo de BD-------------------------------*/
-    public void CrearYAbrirBaseDeDatos() {
-        if (db == null) {
-            db = new DBAdapterSQL(this);
-            db.open();
-        }
-    }
 
-    //String drawName = "algo";
-    // int resID = getResources().getIdentifier(drawName, "drawable", getPackageName());
-
-    public void DesplegarTodosLosRegistros() {
-/*            if (db != null) {
-                MensajeOK(db.ObtenerTodosLosRegistros());
-            } else {
-                MensajeOK("BD nula");
-            }*/
-    }
-
-
-    public void DropearYCrearBD() {
-        MensajeOK(db.DropearYCrearBD());
-    }
-
-
-    public ArrayList<ObjetoBitacora> ObtenerRegistrosDeBitacoraPorFuncion() {
-        return db.ObtenerButacasOcupadas(Integer.parseInt(vg.getIdPelicula()), vg.getDiaFuncion(), vg.getHoraFuncion());
-    }
-
-    public void InsertarRegistroEnBitacora(Intent intento) {
-//            ArrayList<ObjetoFuncion> funciones = ObtenerListaFuncion();
-//            String msg = "";
-//            for(ObjetoFuncion of : funciones){
-//                if(of.getNombrePelicula().equals(vg.getNombrePelicula())&&
-//                   of.getNombreSala().equals(vg.getNombreSala())&&
-//                   of.getDiaFuncion().equals(vg.getDiaFuncion())&&
-//                   of.getHoraInicio().equals(vg.getHoraFuncion())){
-//
-//                    msg = db.InsertarRegistroEnBitacora(of, vg, nombre.getText().toString(), apellido.getText().toString(), cedula.getText().toString());
-//                }
-//            }
-//            if(msg.equals("good")){
-//                EnviarEmail(intento);
-//            } else {
-//                MensajeOK("Ocurrio un error a la hora de registrar compra...");
-//            }
-    }
 
 
     /*--------------------------------------------------------------------------------------------*/
@@ -233,14 +186,18 @@ public class claseBase extends AppCompatActivity {
                     case R.id.btn_continuar:
                         if (asientos.size() == 0) {
                             Mensaje("Debe seleccionar almenos una butaca.");
-                            break;
                         } else {
                             TextView butacas_seleccionadas = (TextView) findViewById(R.id.input_asientos);
                             vg.setAsientosSeleccionados(butacas_seleccionadas.getText().toString());
                             intento = new Intent(getApplicationContext(), ActivityPagoTiquete.class);
                             startActivity(intento);
-                            break;
                         }
+                        break;
+
+                    case R.id.button_volver_inicio:
+                        intento = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intento);
+                        break;
 
                     case R.id.btn_volver:
                         if(vg.getButacasSeleccionadas() > 0){

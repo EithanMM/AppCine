@@ -43,7 +43,7 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
        // txt_id= findViewById(R.id.txt_id);
        // txt_monto= findViewById(R.id.txt_monto);
        // txt_status= findViewById(R.id.txt_status);
-
+        OnclickDelButton(R.id.button_volver_inicio);
 
         InsertarEnBitacora();
 
@@ -64,12 +64,7 @@ public class PaymentDetailsActivity extends claseBase implements Response.Listen
         }
     }
 
-  //  private void verDetalles(JSONObject response, String monto) throws JSONException {
-  //      txt_id.setText(response.getString("id"));
-  //      txt_status.setText(response.getString("status"));
-   //     txt_monto.setText(response.getString(String.format("$%s",monto)));
 
-    //}
 
     private void InsertarEnBitacora(){
 
